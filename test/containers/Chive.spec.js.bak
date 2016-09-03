@@ -1,0 +1,31 @@
+import '../setup'
+import React from 'react'
+import { mount } from 'enzyme'
+import expect from 'expect'
+
+import FlatButton from 'material-ui/FlatButton'
+
+import Chive from '../../src/containers/Chive'
+
+describe('<Chive />', () => {
+  const testChildren = (
+    <FlatButton label='test button' />
+  )
+
+  const wrapper = mount(
+    <Chive>
+      {testChildren}
+    </Chive>
+  )
+
+  describe('<NavBar /> navigation', () => {
+    const tabs = wrapper.find('Tabs')
+    it('should render simulations tab', () => {
+      const simTab = wrapper.find('Tab')
+      console.log(tabs.debug())
+      expect(simTab.text()).toMatch(/SIMULATIONS/)
+    })
+    it('should render outputs tab')
+  })
+  it('should render children')
+})

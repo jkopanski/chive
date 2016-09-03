@@ -1,0 +1,24 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "standard",
+    "standard-react"
+  ],
+  "plugins": [
+    "babel",
+    "react"
+  ],
+  "rules": {
+    "arrow-parens": 0,
+    "babel/arrow-parens": [2, 'as-needed'],
+    "jsx-quotes": ["error", "prefer-single"]
+  },
+  "globals": {
+    "fetch": false,
+    "FormData": false,
+    "Headers": false,
+    "localStorage": false,
+    "Request": false,
+    "sessionStorage": false
+  }
+}
