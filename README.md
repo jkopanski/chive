@@ -2,6 +2,8 @@
 
 > Run SPICE in the clouds
 
+[![Build Status](https://travis-ci.org/jkopanski/chive.svg?branch=master)](https://travis-ci.org/jkopanski/chive)
+
 ### Based on technologies:
 
 * [React](https://facebook.github.io/react/)
