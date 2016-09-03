@@ -25,7 +25,7 @@
     "lint": "eslint src tools",
     "start": "./node_modules/.bin/babel-node tools/run start",
     "test:init": "./node_modules/.bin/babel-node ./node_modules/.bin/tape  test/**/*.spec.js | ./node_modules/.bin/faucet",
-    "test": "./node_modules/.bin/nyc npm test:init",
+    "test": "./node_modules/.bin/nyc npm run test:init",
     "test:report": "./node_modules/.bin/nyc report",
     "test:watch": "npm test -- --watch"
   },
