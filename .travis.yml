@@ -6,4 +6,4 @@ sudo: required
 dist: trusty
 
 after_success:
-  - 'npm test:cover'
+  - 'npm run coveralls'

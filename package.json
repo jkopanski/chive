@@ -25,16 +25,12 @@
     "lint": "eslint src tools",
     "start": "./node_modules/.bin/babel-node tools/run start",
     "test:init": "./node_modules/.bin/babel-node ./node_modules/.bin/tape  test/**/*.spec.js | ./node_modules/.bin/faucet",
-    "test": "./node_modules/.bin/nyc npm run test:init",
+    "test": "./node_modules/.bin/nyc --reporter=text npm run test:init",
     "test:report": "./node_modules/.bin/nyc report",
-    "test:watch": "npm test -- --watch"
+    "test:watch": "npm test -- --watch",
+    "coveralls": "./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls"
   },
   "nyc": {
-    "reporter": [
-      "html",
-      "lcov",
-      "text"
-    ],
     "extension": [
       ".jsx"
     ],
@@ -82,6 +78,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "browser-sync": "^2.12.5",
+    "coveralls": "^2.11.12",
     "enzyme": "^2.2.0",
     "eslint": "^3.1.0",
     "eslint-config-standard": "^5.1.0",
