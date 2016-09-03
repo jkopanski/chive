@@ -24,8 +24,8 @@
     "bundle": "./node_modules/.bin/babel-node tools/run bundle",
     "lint": "eslint src tools",
     "start": "./node_modules/.bin/babel-node tools/run start",
-    "test": "./node_modules/.bin/babel-node ./node_modules/.bin/tape  test/**/*.spec.js | ./node_modules/.bin/faucet",
-    "test:cover": "./node_modules/.bin/nyc npm test",
+    "test:init": "./node_modules/.bin/babel-node ./node_modules/.bin/tape  test/**/*.spec.js | ./node_modules/.bin/faucet",
+    "test": "./node_modules/.bin/nyc npm test:init",
     "test:report": "./node_modules/.bin/nyc report",
     "test:watch": "npm test -- --watch"
   },
