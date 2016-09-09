@@ -45,7 +45,7 @@ const config = {
           presets: ['es2015', 'stage-0', 'react'],
           plugins: ['transform-decorators-legacy']
         }
-     }, {
+      }, {
         test: /\.json$/,
         loader: 'json-loader'
       }
