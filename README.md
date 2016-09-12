@@ -5,6 +5,11 @@
 [![Build Status](https://travis-ci.org/jkopanski/chive.svg?branch=master)](https://travis-ci.org/jkopanski/chive)
 [![Coverage Status](https://coveralls.io/repos/github/jkopanski/chive/badge.svg?branch=master)](https://coveralls.io/github/jkopanski/chive?branch=master)
 
+[![bitHound Overall Score](https://www.bithound.io/github/jkopanski/chive/badges/score.svg)](https://www.bithound.io/github/jkopanski/chive)
+[![bitHound Dependencies](https://www.bithound.io/github/jkopanski/chive/badges/dependencies.svg)](https://www.bithound.io/github/jkopanski/chive/master/dependencies/npm)
+[![bitHound Dev Dependencies](https://www.bithound.io/github/jkopanski/chive/badges/devDependencies.svg)](https://www.bithound.io/github/jkopanski/chive/master/dependencies/npm)
+[![bitHound Code](https://www.bithound.io/github/jkopanski/chive/badges/code.svg)](https://www.bithound.io/github/jkopanski/chive)
+
 ### Based on technologies:
 
 * [React](https://facebook.github.io/react/)
