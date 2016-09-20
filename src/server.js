@@ -35,7 +35,7 @@ const page = (element, state, js) => (`
     <style type="text/css">
       html, body {
         margin: 0;
-        padding: 0'
+        padding: 0;
       }
     </style>
   </head>
