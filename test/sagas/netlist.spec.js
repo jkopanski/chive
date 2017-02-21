@@ -25,7 +25,7 @@ test('netlist upload flow', assert => {
 
   assert.deepEqual(
     generator.next({ file: 'sample' }).value,
-    call(api.netlist, 'sample'),
+    call(api.netlistUpload, 'sample'),
     'call api'
   )
 

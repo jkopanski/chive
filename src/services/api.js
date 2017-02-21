@@ -67,7 +67,7 @@ export const authenticate = (user, pass) => {
   )
 }
 
-export const netlist = fileInput => {
+export const netlistUpload = fileInput => {
   let data = new FormData()
   data.append('netlist', fileInput)
 
@@ -77,7 +77,7 @@ export const netlist = fileInput => {
       'Accept': 'application/json'
     },
     body: data
-  }, 'netlist', {})
+  }, 'netlist/upload', {})
   .then(e =>
     e.map(R.compose(R.prop('status'), R.prop('result')))
   )
@@ -91,7 +91,7 @@ export const simulationStart = analyses => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(R.filter(R.prop('enable'), analyses))
-  }, 'sim', {})
+  }, 'sim/run', {})
   .then(e =>
     e.map(R.compose(R.prop('simId'), R.prop('result')))
   )
@@ -105,7 +105,7 @@ export const simulationStop = simId => {
       'Content-Type': 'application/json'
     },
     body: {}
-  }, `sim/stop/${simId}`, {})
+  }, `sim/terminate/${simId}`, {})
   .then(e =>
     e.map(R.compose(R.prop('result')))
   )

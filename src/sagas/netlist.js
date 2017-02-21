@@ -16,9 +16,9 @@ import { api } from '../services'
 export function * netlist () {
   while (true) {
     const { file } = yield take(Netlist.uploadRequest)
-    const resEither = yield call(api.netlist, file)
-    yield put(netlistUpload(resEither))
-    if (resEither.isLeft) {
+    const eresult = yield call(api.netlistUpload, file)
+    yield put(netlistUpload(eresult))
+    if (eresult.isLeft) {
       yield put(notifyRequest('Failed to upload selected netlist'))
     }
   }

@@ -13,10 +13,10 @@ test('authenticate response handling', assert => {
     reqheaders: {
       'Accept': 'application/json'
     }}).log(console.log)
-  scope.post('/netlist')
+  scope.post('/netlist/upload')
   .reply(200, {'status': 'ok'})
 
-  let res = api.netlist('admin')
+  let res = api.netlistUpload('admin')
   let p = Promise.resolve(res)
   p.then(e => assert.ok(e.isRight, 'Either is Right'))
 
@@ -28,10 +28,10 @@ test('authenticate response handling', assert => {
     reqheaders: {
       'Accept': 'application/json'
     }}).log(console.log)
-  scope.post('/netlist')
+  scope.post('/netlist/upload')
   .reply(501, {'status': 'netlist format not supported'})
 
-  res = api.netlist('admin')
+  res = api.netlistUpload('admin')
   p = Promise.resolve(res)
   p.then(e => assert.ok(e.isLeft, 'Either is Left'))
 

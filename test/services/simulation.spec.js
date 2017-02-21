@@ -60,13 +60,13 @@ test('simulation start/stop', assert => {
       'Accept': 'application/json',
       'Content-type': 'application/json'
     }}).log(console.log)
-  scope.post('/sim', body => {
+  scope.post('/sim/run', body => {
     assert.deepEqual(body, analyses,
       'sim start should filter out disabled analyses')
     return true
   })
   .reply(200, {'simId': retId})
-  .get(`/sim/stop/${retId}`)
+  .get(`/sim/terminate/${retId}`)
   .reply(200, {})
 
   api.simulationStart(sentAnalyses)
@@ -103,7 +103,7 @@ test('simulation status', assert => {
       'Accept': 'application/json',
       'Content-type': 'application/json'
     }}).log(console.log)
-  scope.post('/sim', body => {
+  scope.post('/sim/run', body => {
     assert.deepEqual(body, analyses,
       'sim start should filter out disabled analyses')
     return true

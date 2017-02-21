@@ -13,6 +13,6 @@ export const analytics = {
 
 let apiUrl = 'http://localhost:8087/'
 if (process.env.NODE_ENV === 'production') {
-  apiUrl = 'http://api.quivade.net/'
+  apiUrl = 'http://api.quivade.com/'
 }
 export { apiUrl }
