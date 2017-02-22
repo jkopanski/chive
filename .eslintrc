@@ -15,6 +15,7 @@
   },
   "globals": {
     "fetch": false,
+    "FileReader": false,
     "FormData": false,
     "Headers": false,
     "localStorage": false,

@@ -4,7 +4,7 @@ import { Either } from 'ramda-fantasy'
 
 export const netlistUploadRequest = createAction(
   Netlist.uploadRequest,
-  filename => ({ file: filename })
+  file => ({ file })
 )
 
 export const netlistUpload = createAction(

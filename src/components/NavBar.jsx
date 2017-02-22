@@ -114,7 +114,11 @@ class NavBar extends Component {
   }
 
   handleFile = event => {
-    this.props.netlistUploadRequest(event.target.files[0])
+    let reader = new FileReader()
+    reader.onload = ev => {
+      this.props.netlistUploadRequest(ev.target.result)
+    }
+    reader.readAsText(event.target.files[0])
   }
 
   handleLogin = (username, password) => {

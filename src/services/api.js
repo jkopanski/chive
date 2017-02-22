@@ -5,6 +5,7 @@ import R from 'ramda'
 import { Either } from 'ramda-fantasy'
 
 import { apiUrl } from '../config'
+// import { netlistSchema } from '../constants'
 
 function makeFullUrl (endpoint) {
   const fullUrl = (endpoint.indexOf(apiUrl) === -1)
@@ -26,11 +27,13 @@ const callApi = R.curry((options, endpoint, schema) => {
   )
 
   let opt = options
-  const token = window.localStorage.getItem('Auth')
+  // make it const for now
+  // const token = window.localStorage.getItem('Auth')
+  const token = 'Basic ' + window.btoa('admin:admin')
   if (token) {
     opt = R.over(
       R.lensProp('headers'),
-      R.assoc('Auth', token),
+      R.assoc('Authorization', token),
       options
     )
   }
@@ -68,18 +71,20 @@ export const authenticate = (user, pass) => {
 }
 
 export const netlistUpload = fileInput => {
-  let data = new FormData()
-  data.append('netlist', fileInput)
+  // TODO: backend does not yet support multipart-form data
+  // let data = new FormData()
+  // data.append('netlist', fileInput)
 
   return callApi({
     method: 'post',
     headers: {
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'text/plain; charset=UTF-8'
     },
-    body: data
+    body: fileInput
   }, 'netlist/upload', {})
   .then(e =>
-    e.map(R.compose(R.prop('status'), R.prop('result')))
+    e.map(R.compose(R.prop('id'), R.prop('result')))
   )
 }
 
