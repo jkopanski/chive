@@ -82,7 +82,7 @@ export const netlistUpload = fileInput => {
       'Content-Type': 'text/plain; charset=UTF-8'
     },
     body: fileInput
-  }, 'netlist/upload', {})
+  }, 'netlists/upload', {})
   .then(e =>
     e.map(R.compose(R.prop('id'), R.prop('result')))
   )
