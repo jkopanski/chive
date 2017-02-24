@@ -1,9 +1,7 @@
 import React, { Component, PropTypes } from 'react'
-import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { push } from 'redux-router'
 
-import FlatButton from 'material-ui/FlatButton'
 import IconButton from 'material-ui/IconButton'
 import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
@@ -16,8 +14,7 @@ import LoginDialog from './Login/Dialog'
 
 import {
   authRequest,
-  logout,
-  netlistUploadRequest
+  logout
 } from '../actions'
 
 function getStyles (props, context) {
@@ -82,7 +79,7 @@ function getStyles (props, context) {
 
 @connect(
   state => ({ auth: state.chive.auth }),
-  { push, authRequest, logout, netlistUploadRequest }
+  { push, authRequest, logout }
 )
 class NavBar extends Component {
   static propTypes = {
@@ -90,7 +87,6 @@ class NavBar extends Component {
     children: PropTypes.node,
     authRequest: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
-    netlistUploadRequest: PropTypes.func.isRequired,
     push: PropTypes.func.isRequired,
     title: PropTypes.node,
     zDepth: propTypes.zDepth
@@ -113,14 +109,6 @@ class NavBar extends Component {
     this.props.push(value)
   }
 
-  handleFile = event => {
-    let reader = new FileReader()
-    reader.onload = ev => {
-      this.props.netlistUploadRequest(ev.target.result)
-    }
-    reader.readAsText(event.target.files[0])
-  }
-
   handleLogin = (username, password) => {
     this.props.authRequest(username, password)
     this.closeLoginDialog()
@@ -132,11 +120,6 @@ class NavBar extends Component {
 
   closeLoginDialog = () => {
     this.setState({ loginDialogOpen: false })
-  }
-
-  openFileDialog = () => {
-    let fileUploadDom = ReactDOM.findDOMNode(this.refs.fileUpload)
-    fileUploadDom.click()
   }
 
   render () {
@@ -186,23 +169,6 @@ class NavBar extends Component {
       </IconMenu>
     )
 
-    const selectDesignButton = (
-      <div style={styles.iconButtonIcon}>
-        <FlatButton
-          style={styles.flatButton}
-          label='Select Design'
-          onClick={this.openFileDialog}
-        >
-          <input
-            ref='fileUpload'
-            type='file'
-            style={{'display': 'none'}}
-            onChange={this.handleFile}
-          />
-        </FlatButton>
-      </div>
-    )
-
     return (
       <div>
         <Paper
@@ -211,7 +177,6 @@ class NavBar extends Component {
           zDepth={zDepth}
         >
           {titleElement}
-          {selectDesignButton}
           {auth.username
             ? iconElementRightSigned
             : iconElementRightUnsigned

@@ -10,12 +10,12 @@ import {
   netlistUpload,
   notifyRequest
 } from '../../src/actions'
-import { Netlist } from '../../src/constants/ActionTypes'
-import { netlist } from '../../src/sagas/netlist'
+import { Netlists } from '../../src/constants/ActionTypes'
+import { netlists } from '../../src/sagas/netlists'
 import { api } from '../../src/services'
 
 test('netlist upload flow', assert => {
-  const generator = netlist()
+  const generator = netlists()
 
   assert.deepEqual(
     generator.next().value,

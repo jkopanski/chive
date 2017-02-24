@@ -1,5 +1,5 @@
 export * from './analysis'
 export * from './auth'
-export * from './netlist'
+export * from './netlists'
 export * from './notify'
 export * from './simulation'

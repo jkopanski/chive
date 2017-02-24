@@ -84,7 +84,7 @@ export const netlistUpload = fileInput => {
     body: fileInput
   }, 'netlists/upload', {})
   .then(e =>
-    e.map(R.compose(R.prop('id'), R.prop('result')))
+    e.map(R.prop('result'))
   )
 }
 

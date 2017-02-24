@@ -14,7 +14,7 @@ export const Auth = {
 }
 
 // netlist manipulation actions
-export const Netlist = {
+export const Netlists = {
   uploadRequest: 'netlistUploadRequest',
   upload: 'netlistUpload'
 }

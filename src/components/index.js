@@ -4,5 +4,6 @@ export {
   SetupDialogAdd,
   SetupDialogEdit
 } from './Analyses/SetupDialog'
+export Netlists from './Netlists/List'
 export Outputs from './Outputs'
 export withTheme from './withTheme'

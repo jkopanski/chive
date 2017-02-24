@@ -43,8 +43,8 @@ class Chive extends Component {
       <MuiThemeProvider muiTheme={this.context.muiTheme}>
         <div>
           <NavBar>
+            <Tab value='/netlists' label='Netlists' />
             <Tab value='/analyses' label='Analyses' />
-            <Tab value='/outputs' label='Outputs' />
           </NavBar>
           <div style={styles.root}>
             {this.props.children}

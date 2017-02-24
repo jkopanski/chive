@@ -5,7 +5,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
 import {
   Analyses,
-  Chive
+  Chive,
+  Netlists
 } from '../containers'
 import {
   Login,
@@ -19,10 +20,11 @@ const routes = theme =>
   <Route path='/' component={withTheme(getMuiTheme(theme))(Chive)}>
     {/* Default to *whatever* should be */}
     {/* set in components/Navbar as well */}
-    <IndexRoute component={Analyses} />
+    <IndexRoute component={Netlists} />
     {/* Need to add navigation to */}
     {/* containers/Chive and components/NavBar */}
     <Route path='login' component={Login} />
+    <Route path='netlists' component={Netlists} />
     <Route path='outputs' component={Outputs} />
     <Route path='analyses' component={Analyses}>
       <Route
