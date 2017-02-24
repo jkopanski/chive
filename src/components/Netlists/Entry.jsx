@@ -21,7 +21,7 @@ class NetlistEntry extends Component {
       <ListItem
         primaryText={filename}
         secondaryText={uuid}
-        leftCheckbox={<Checkbox toggled={enable} />}
+        leftCheckbox={<Checkbox checked={enable} />}
       />
     )
   }

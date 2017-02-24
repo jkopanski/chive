@@ -91,7 +91,7 @@ class DCSetup extends Component {
           </Span>
           <Span columns={4} last>
             <TextField
-              defaulValue={sweepStop}
+              defaultValue={sweepStop}
               floatingLabelText='Stop'
               onChange={actions.changeStopVal}
             />

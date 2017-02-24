@@ -43,7 +43,7 @@ class AnalysisEntry extends Component {
       <ListItem
         primaryText={name}
         secondaryText={type}
-        leftCheckbox={<Checkbox toggled={enable} />}
+        leftCheckbox={<Checkbox checked={enable} />}
         rightIconButton={rightIconMenu}
       />
     )
