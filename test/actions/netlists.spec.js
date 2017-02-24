@@ -5,12 +5,12 @@ import {
   netlistUpload,
   netlistUploadRequest
 } from '../../src/actions'
-import { Netlist } from '../../src/constants/ActionTypes'
+import { Netlists } from '../../src/constants/ActionTypes'
 
 test('netlist action creators', assert => {
   assert.deepEqual(
     netlistUploadRequest('test.cir', 'sample data'),
-    { type: Netlist.uploadRequest,
+    { type: Netlists.uploadRequest,
       payload: {
         filename: 'test.cir',
         file: 'sample data'
@@ -23,7 +23,7 @@ test('netlist action creators', assert => {
       id: 'b4acdb77-8b8c-427c-a598-fee0567b4812',
       filename: 'test.cir'
     })),
-    { type: Netlist.upload,
+    { type: Netlists.upload,
       payload: {
         id: 'b4acdb77-8b8c-427c-a598-fee0567b4812',
         filename: 'test.cir'
@@ -33,7 +33,7 @@ test('netlist action creators', assert => {
 
   assert.deepEqual(
     netlistUpload(Either.Left('test msg')),
-    { type: Netlist.upload,
+    { type: Netlists.upload,
       error: true,
       payload: new Error('test msg')
     }, 'create proper failed uplad action'

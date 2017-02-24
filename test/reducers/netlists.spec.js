@@ -1,7 +1,7 @@
 import test from 'tape'
 
 import netlists from '../../src/reducers/netlists'
-import { Netlist } from '../../src/constants/ActionTypes'
+import { Netlists } from '../../src/constants/ActionTypes'
 
 let nets = [{
   id: 'b4acdb77-8b8c-427c-a598-fee0567b4812',
@@ -20,7 +20,7 @@ test('netlists reducer', assert => {
 
   assert.deepEqual(
     netlists(nets, {
-      type: Netlist.upload,
+      type: Netlists.upload,
       payload: {
         id: 'aac37bc8-10b6-41f4-bd16-5cd49d7eec6a',
         filename: 'test.cir'
@@ -34,7 +34,7 @@ test('netlists reducer', assert => {
 
   assert.deepEqual(
     netlists(nets, {
-      type: Netlist.upload,
+      type: Netlists.upload,
       error: true,
       payload: new Error('test error')
     }),

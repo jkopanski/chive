@@ -19,7 +19,7 @@ test('netlist upload flow', assert => {
 
   assert.deepEqual(
     generator.next().value,
-    take(Netlist.uploadRequest),
+    take(Netlists.uploadRequest),
     'create upload request'
   )
 
@@ -44,7 +44,7 @@ test('netlist upload flow', assert => {
 
   assert.deepEqual(
     generator.next().value,
-    take(Netlist.uploadRequest),
+    take(Netlists.uploadRequest),
     'take another upload request'
   )
 
