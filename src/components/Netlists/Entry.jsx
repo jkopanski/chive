@@ -1,18 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 
-import Checkbox from 'material-ui/Checkbox'
+import FlatButton from 'material-ui/FlatButton'
 import { ListItem } from 'material-ui/List'
 
 class NetlistEntry extends Component {
   static propTypes = {
-    enable: PropTypes.bool.isRequired,
     filename: PropTypes.string.isRequired,
     uuid: PropTypes.string.isRequired
   };
 
   render () {
     let {
-      enable,
       filename,
       uuid
     } = this.props
@@ -20,8 +18,8 @@ class NetlistEntry extends Component {
     return (
       <ListItem
         primaryText={filename}
-        secondaryText={uuid}
-        leftCheckbox={<Checkbox checked={enable} />}
+        secondaryText={`id: ${uuid}`}
+        rightIconButton={<FlatButton label='simulate' secondary />}
       />
     )
   }

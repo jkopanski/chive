@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
+
 import Divider from 'material-ui/Divider'
 import List from 'material-ui/List'
+
 import NetlistEntry from './Entry'
 import NetlistEntryAdd from './EntryAdd'
 
@@ -21,12 +23,10 @@ class NetlistsList extends Component {
     return (
       <List>
         {netlists.map(netlist =>
-          <div>
+          <div key={netlist.id}>
             <NetlistEntry
-              key={netlist.id}
               filename={netlist.filename}
               uuid={netlist.id}
-              enable
             />
             <Divider />
           </div>
