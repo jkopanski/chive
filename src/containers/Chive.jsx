@@ -44,7 +44,7 @@ class Chive extends Component {
         <div>
           <NavBar>
             <Tab value='/netlists' label='Netlists' />
-            <Tab value='/analyses' label='Analyses' />
+            <Tab value='/simulations' label='Simulations' />
           </NavBar>
           <div style={styles.root}>
             {this.props.children}

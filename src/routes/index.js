@@ -4,15 +4,15 @@ import { Route, IndexRoute } from 'react-router'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
 import {
-  Analyses,
   Chive,
-  Netlists
+  Netlists,
+  Simulations
 } from '../containers'
 import {
   Login,
-  SetupDialogAdd,
-  SetupDialogEdit,
-  Outputs,
+  // SetupDialogAdd,
+  // SetupDialogEdit,
+  // Outputs,
   withTheme
 } from '../components'
 
@@ -25,7 +25,8 @@ const routes = theme =>
     {/* containers/Chive and components/NavBar */}
     <Route path='login' component={Login} />
     <Route path='netlists' component={Netlists} />
-    <Route path='outputs' component={Outputs} />
+    <Route path='simulations' component={Simulations} />
+    {/*
     <Route path='analyses' component={Analyses}>
       <Route
         path='add(/:type)'
@@ -36,6 +37,7 @@ const routes = theme =>
         component={SetupDialogEdit}
       />
     </Route>
+    */}
   </Route>
 
 export default routes
