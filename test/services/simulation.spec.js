@@ -7,69 +7,26 @@ import { Either } from 'ramda-fantasy'
 import { api } from '../../src/services'
 import { apiUrl } from '../../src/config.js'
 
-let analyses = [{
-  id: 0,
-  enable: true,
-  name: 'dcOp',
-  type: 'dc',
-  properties: {
-    sweepVar: 'DC Source',
-    sweepName: 'Vgs',
-    sweepType: 'Linear',
-    sweepSteps: '10',
-    sweepStart: '0',
-    sweepStop: '1.2'
-  }
-}, {
-  id: 1,
-  enable: true,
-  name: 'gain',
-  type: 'ac',
-  properties: {
-    sweepVar: 'Device parameter',
-    sweepName: 'W',
-    sweepSteps: '100',
-    sweepStart: '1u',
-    sweepStop: '100u'
-  }
-}]
-
-let disAnalyses = [{
-  id: 2,
-  enable: false,
-  name: 'noise',
-  type: 'noise',
-  properties: {
-    sweepVar: 'Temperature',
-    sweepSteps: '20',
-    sweepStart: '-40',
-    sweepStop: '125'
-  }
-}]
-
-let sentAnalyses = [
-  ...analyses,
-  ...disAnalyses
-]
-
 test('simulation start/stop', assert => {
-  const retId = 'b4acdb778b8c427ca598fee0567b4812'
+  const netId = '348fcfef-29f5-4bfe-9328-b25a148092c9'
+  const simId = 'b4acdb77-8b8c-427c-a598-fee0567b4812'
+  const procs = 4
 
   let scope = nock(apiUrl, {
     reqheaders: {
       'Accept': 'application/json',
       'Content-type': 'application/json'
     }}).log(console.log)
-  scope.post('/sim/run', body => {
-    assert.deepEqual(body, analyses,
-      'sim start should filter out disabled analyses')
+  scope.post(`/simulations/start/${netId}`, body => {
+    assert.deepEqual(body, { nodes: procs },
+      'simulation start should pass number of processes in the body')
     return true
   })
-  .reply(200, {'simId': retId})
-  .get(`/sim/terminate/${retId}`)
+  .reply(200, {'id': simId})
+  .get(`/simulations/${simId}/stop`)
   .reply(200, {})
 
-  api.simulationStart(sentAnalyses)
+  api.simulationStart(netId, procs)
   .then(
     e => {
       assert.ok(e.isRight, 'start: Either is Right')
@@ -77,7 +34,7 @@ test('simulation start/stop', assert => {
       // test sim stop
       let id = Either.either(
         assert.fail,
-        id => id,
+        resp => resp.id,
         e
       )
 
@@ -89,32 +46,34 @@ test('simulation start/stop', assert => {
   )
   .then(e => {
     if (!scope.isDone()) {
-      assert.fail('there should be api call to /sim/stop/id by now')
+      assert.fail('there should be api call to /simulation/:id/stop by now')
     }
     assert.end()
   })
 })
 
 test('simulation status', assert => {
-  const retId = 'b4acdb778b8c427ca598fee0567b4812'
+  const netId = '348fcfef-29f5-4bfe-9328-b25a148092c9'
+  const simId = 'b4acdb77-8b8c-427c-a598-fee0567b4812'
+  const procs = 4
 
   let scope = nock(apiUrl, {
     reqheaders: {
       'Accept': 'application/json',
       'Content-type': 'application/json'
     }}).log(console.log)
-  scope.post('/sim/run', body => {
-    assert.deepEqual(body, analyses,
-      'sim start should filter out disabled analyses')
+  scope.post(`/simulations/start/${netId}`, body => {
+    assert.deepEqual(body, { nodes: procs },
+      'simulation start should pass number of processes in the body')
     return true
   })
-  .reply(200, {'simId': retId})
-  .get(`/sim/status/${retId}`)
+  .reply(200, {'id': simId})
+  .get(`/simulations/${simId}`)
   .reply(200, {
     'progress': 80
   })
 
-  api.simulationStart(sentAnalyses)
+  api.simulationStart(netId, procs)
   .then(
     e => {
       assert.ok(e.isRight, 'start: Either is Right')
@@ -122,7 +81,7 @@ test('simulation status', assert => {
       // test sim stop
       let id = Either.either(
         assert.fail,
-        id => id,
+        resp => resp.id,
         e
       )
 
@@ -141,7 +100,7 @@ test('simulation status', assert => {
   )
   .then(e => {
     if (!scope.isDone()) {
-      assert.fail('there should be api call to /sim/status/id by now')
+      assert.fail('there should be api call to /simulations/:id by now')
     }
     assert.end()
   })

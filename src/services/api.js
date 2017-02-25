@@ -88,17 +88,17 @@ export const netlistUpload = fileInput => {
   )
 }
 
-export const simulationStart = analyses => {
+export const simulationStart = (nid, nodes) => {
   return callApi({
     method: 'post',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(R.filter(R.prop('enable'), analyses))
-  }, 'sim/run', {})
+    body: JSON.stringify({nodes: nodes})
+  }, `simulations/start/${nid}`, {})
   .then(e =>
-    e.map(R.compose(R.prop('simId'), R.prop('result')))
+    e.map(R.prop('result'))
   )
 }
 
@@ -110,9 +110,9 @@ export const simulationStop = simId => {
       'Content-Type': 'application/json'
     },
     body: {}
-  }, `sim/terminate/${simId}`, {})
+  }, `simulations/${simId}/stop`, {})
   .then(e =>
-    e.map(R.compose(R.prop('result')))
+    e.map(R.prop('result'))
   )
 }
 
@@ -124,7 +124,7 @@ export const simulationStatus = simId => {
       'Content-Type': 'application/json'
     },
     body: {}
-  }, `sim/status/${simId}`, {})
+  }, `simulations/${simId}`, {})
   .then(e =>
     e.map(R.compose(R.prop('result')))
   )
