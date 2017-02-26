@@ -25,6 +25,7 @@ class SimulationsList extends Component {
             key={simulation.id}
             netlist={simulation.netlist}
             uuid={simulation.id}
+            status={simulation.status}
           />
         )}
       </List>
