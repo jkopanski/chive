@@ -17,29 +17,29 @@ import {
 import { Simulation } from '../constants/ActionTypes'
 import { api } from '../services'
 
-export function * updateStatus () {
-  while (true) {
-    const simId = yield take(Simulation.status)
-    const statusEither = yield call(api.simulationStatus, simId)
-    yield put(simulationStatus(statusEither))
-  }
-}
+// export function * updateStatus () {
+//   while (true) {
+//     const simId = yield take(Simulation.status)
+//     const statusEither = yield call(api.simulationStatus, simId)
+//     yield put(simulationStatus(statusEither))
+//   }
+// }
 
 export function * monitorSimulation (sid) {
-  yield put(simulationStatus(sid))
+  const estatus = yield call(api.simulationStatus, sid)
+  yield put(simulationStatus(estatus))
 }
 
 export function * simulationFlow (action) {
-  console.log('test')
   const { netlist, nodes, name } = action.payload
-  const esim = yield call(api.simulationStart, netlist, nodes)
+  const esim = yield call(api.netlistSimulate, netlist, nodes)
   yield put(simulationStart(
-    esim.map(R.assoc('netlist': name))
+    esim.map(R.assoc('netlist', name))
   ))
 
   yield Either.either(
     e => put(notifyRequest('Could not start simulation')),
-    e => monitorSimulation(e),
+    e => call(monitorSimulation, R.prop('id', e)),
     esim
   )
 }
@@ -59,7 +59,7 @@ export function * stopSimulation () {
 export function * simulations () {
   yield [
     takeEvery(Simulation.startRequest, simulationFlow),
-    fork(updateStatus),
+    // fork(updateStatus),
     fork(stopSimulation)
   ]
 }

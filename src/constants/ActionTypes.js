@@ -36,6 +36,7 @@ export const Output = {
 
 // simulation related actions
 export const Simulation = {
+  startRequest: 'simulationStartRequest',
   start: 'simulationStart',
   stop: 'simulationStop',
   status: 'simulationStatus'

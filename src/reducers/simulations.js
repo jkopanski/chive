@@ -2,12 +2,15 @@ import { Simulation } from '../constants/ActionTypes'
 import R from 'ramda'
 
 const simulations = (state = [], action) => {
+  if (action.error) return state
+
   switch (action.type) {
     case Simulation.start:
       return [
         ...state, {
-          id: (action.error ? undefined : action.payload.id),
-          status: 'running',
+          id: action.payload.id,
+          netlist: action.payload.netlist,
+          status: 'pending',
           progress: 0
         }
       ]

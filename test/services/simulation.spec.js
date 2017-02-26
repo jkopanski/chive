@@ -26,7 +26,7 @@ test('simulation start/stop', assert => {
   .get(`/simulations/${simId}/stop`)
   .reply(200, {})
 
-  api.simulationStart(netId, procs)
+  api.netlistSimulate(netId, procs)
   .then(
     e => {
       assert.ok(e.isRight, 'start: Either is Right')
@@ -73,7 +73,7 @@ test('simulation status', assert => {
     'progress': 80
   })
 
-  api.simulationStart(netId, procs)
+  api.netlistSimulate(netId, procs)
   .then(
     e => {
       assert.ok(e.isRight, 'start: Either is Right')

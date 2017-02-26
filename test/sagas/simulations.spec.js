@@ -3,12 +3,14 @@ import {
   call,
   fork,
   put,
-  take
+  take,
+  takeEvery
 } from 'redux-saga/effects'
 import { Either } from 'ramda-fantasy'
 
 import {
   simulationStart,
+  simulationStartRequest,
   simulationStatus,
   simulationStop
 } from '../../src/actions'
@@ -17,9 +19,51 @@ import {
   updateStatus,
   startSimulation,
   stopSimulation,
+  simulationFlow,
   simulationSaga
-} from '../../src/sagas/simulation'
+} from '../../src/sagas/simulations'
 import { api } from '../../src/services'
+
+test('simulation start generator', assert => {
+  const generator = startSimulation()
+
+  assert.deepEqual(
+    generator.next().value,
+    takeEvery(Simulation.startRequest, simulationFlow),
+    'wait for every simulation start request'
+  )
+
+  assert.end()
+})
+
+test('simulation flow', assert => {
+  const nid = 'b4acdb77-8b8c-427c-a598-fee0567b4812'
+  const sid = '348fcfef-29f5-4bfe-9328-b25a148092c9'
+  const file = 'chip.cir'
+  const procs = 5
+
+  const generator =
+    simulationFlow(
+      simulationStartRequest(nid, procs, file)
+    )
+
+  assert.deepEqual(
+    generator.next().value,
+    call(api.netlistSimulate, nid, procs),
+    'call api endpoint'
+  )
+
+  assert.deepEqual(
+    generator.next(
+      Either.Right({ 'id': sid })
+    ).value,
+    put(simulationStart(
+      Either.Right({ 'id': sid, 'netlist': file }))),
+    'successsful simulation start'
+  )
+
+  assert.end()
+})
 
 test('status update generator', assert => {
   const generator = updateStatus()
@@ -40,43 +84,6 @@ test('status update generator', assert => {
     generator.next(Either.Right({ progress: 80 })).value,
     put(simulationStatus(Either.Right({ progress: 80 }))),
     'successsful status update'
-  )
-
-  assert.end()
-})
-
-test('simulation start generator', assert => {
-  const generator = startSimulation()
-  const analyses = [{
-    id: 0,
-    name: 'DCOp',
-    type: 'dc',
-    properties: [undefined],
-    enable: true
-  }, {
-    id: 1,
-    name: 'slew',
-    type: 'tran',
-    properties: [undefined],
-    enable: false
-  }]
-
-  assert.deepEqual(
-    generator.next().value,
-    take(Simulation.start),
-    'wait for simulation start request'
-  )
-
-  assert.deepEqual(
-    generator.next(analyses).value,
-    call(api.simulationStart, analyses),
-    'call api with proper analyses'
-  )
-
-  assert.deepEqual(
-    generator.next(Either.Right({})).value,
-    put(simulationStart(Either.Right({}))),
-    'successsful simulation start'
   )
 
   assert.end()

@@ -2,12 +2,18 @@
 import createAction from './createAction'
 import { Simulation } from '../constants/ActionTypes'
 import { Either } from 'ramda-fantasy'
+import R from 'ramda'
+
+export const simulationStartRequest = createAction(
+  Simulation.startRequest,
+  (nid, nodes, file) => ({ netlist: nid, nodes: nodes, name: file })
+)
 
 export const simulationStart = createAction(
   Simulation.start,
   simId => Either.either(
     error => new Error(error),
-    id => ({ simulationId: id }),
+    R.identity,
     simId
   )
 )
@@ -16,7 +22,7 @@ export const simulationStatus = createAction(
   Simulation.status,
   progress => Either.either(
     error => new Error(error),
-    percent => ({ progress: percent }),
+    R.identity,
     progress
   )
 )

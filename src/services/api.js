@@ -88,7 +88,7 @@ export const netlistUpload = fileInput => {
   )
 }
 
-export const simulationStart = (nid, nodes) => {
+export const netlistSimulate = (nid, nodes) => {
   return callApi({
     method: 'post',
     headers: {
@@ -96,7 +96,7 @@ export const simulationStart = (nid, nodes) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({nodes: nodes})
-  }, `simulations/start/${nid}`, {})
+  }, `netlists/${nid}/simulate`, {})
   .then(e =>
     e.map(R.prop('result'))
   )
@@ -122,10 +122,9 @@ export const simulationStatus = simId => {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
-    },
-    body: {}
+    }
   }, `simulations/${simId}`, {})
   .then(e =>
-    e.map(R.compose(R.prop('result')))
+    e.map(R.prop('result'))
   )
 }

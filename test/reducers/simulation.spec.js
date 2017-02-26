@@ -5,14 +5,17 @@ import { Simulation } from '../../src/constants/ActionTypes'
 
 let sims = [{
   id: '0',
+  netlist: 'test0.cir',
   status: 'finished',
   progress: 100
 }, {
   id: '1',
-  status: 'running',
-  progress: 43
+  netlist: 'test1.cir',
+  status: 'pending',
+  progress: 0
 }, {
   id: '2',
+  netlist: 'test2.cir',
   status: 'cancelled',
   progress: 62
 }]
@@ -26,12 +29,12 @@ test('simulations reducer', assert => {
       type: Simulation.start,
       payload: {
         id: 'random',
-        status: 'running',
-        progress: 0
+        netlist: 'test.cir'
       }
     }), [...sims, {
       id: 'random',
-      status: 'running',
+      netlist: 'test.cir',
+      status: 'pending',
       progress: 0
     }],
     'should handle simulation start'
@@ -44,19 +47,12 @@ test('simulations reducer', assert => {
         id: '1',
         status: 'cancelled'
       }
-    }), [{
-      id: '0',
-      status: 'finished',
-      progress: 100
-    }, {
-      id: '1',
+    }), [sims[0], {
+      id: sims[1].id,
+      netlist: sims[1].netlist,
       status: 'cancelled',
-      progress: 43
-    }, {
-      id: '2',
-      status: 'cancelled',
-      progress: 62
-    }],
+      progress: sims[1].progress
+    }, sims[2]],
     'should handle simulation stop'
   )
 
@@ -65,21 +61,16 @@ test('simulations reducer', assert => {
       type: Simulation.status,
       payload: {
         id: '1',
+        status: 'running',
         progress: 54
       }
-    }), [{
-      id: '0',
-      status: 'finished',
-      progress: 100
-    }, {
-      id: '1',
-      status: 'running',
+    }), [sims[0], {
+      id: sims[1].id,
+      netlist: sims[1].netlist,
+      status: sims[1].status,
       progress: 54
-    }, {
-      id: '2',
-      status: 'cancelled',
-      progress: 62
-    }]
+    }, sims[2]],
+    'should update simulation'
   )
 
   assert.end()
