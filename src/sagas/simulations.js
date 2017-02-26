@@ -2,9 +2,14 @@ import {
   call,
   fork,
   put,
-  take
+  take,
+  takeEvery
 } from 'redux-saga/effects'
+import R from 'ramda'
+import { Either } from 'ramda-fantasy'
+
 import {
+  notifyRequest,
   simulationStart,
   simulationStatus,
   simulationStop
@@ -20,12 +25,27 @@ export function * updateStatus () {
   }
 }
 
+export function * monitorSimulation (sid) {
+  yield put(simulationStatus(sid))
+}
+
+export function * simulationFlow (action) {
+  console.log('test')
+  const { netlist, nodes, name } = action.payload
+  const esim = yield call(api.simulationStart, netlist, nodes)
+  yield put(simulationStart(
+    esim.map(R.assoc('netlist': name))
+  ))
+
+  yield Either.either(
+    e => put(notifyRequest('Could not start simulation')),
+    e => monitorSimulation(e),
+    esim
+  )
+}
+
 export function * startSimulation () {
-  while (true) {
-    const analyses = yield take(Simulation.start)
-    const simEither = yield call(api.simulationStart, analyses)
-    yield put(simulationStart(simEither))
-  }
+  yield takeEvery(Simulation.startRequest, simulationFlow)
 }
 
 export function * stopSimulation () {
@@ -36,10 +56,10 @@ export function * stopSimulation () {
   }
 }
 
-export function * simulationSaga () {
+export function * simulations () {
   yield [
+    takeEvery(Simulation.startRequest, simulationFlow),
     fork(updateStatus),
-    fork(startSimulation),
     fork(stopSimulation)
   ]
 }
