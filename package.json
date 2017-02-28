@@ -103,6 +103,7 @@
     "expect": "^1.20.0",
     "express": "^4.14.0",
     "faucet": "0.0.1",
+    "flow-bin": "^0.40.0",
     "glob": "^7.1.1",
     "istanbul": "^1.1.0-alpha.1",
     "json-loader": "^0.5.4",
