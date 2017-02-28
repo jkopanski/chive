@@ -1,13 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import { Provider } from 'react-redux'
+import { AppContainer } from 'react-hot-loader'
 import { reduxReactRouter } from 'redux-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import createHistory from 'history/lib/createBrowserHistory'
 
-import { Root } from './containers'
+import Root from './containers/Root'
 import configureStore from './store/configureStore'
-import routes from './routes'
 import { rootClientSaga } from './sagas'
 import QuivadeTheme from './styles/theme'
 
@@ -23,12 +22,23 @@ const store = reduxReactRouter({
   createHistory
 })(configureStore)(window.__INITIAL_STATE__)
 store.runSaga(rootClientSaga)
+
+let routes = require('./routes').default
 const rootElement = document.getElementById('root')
-const node = (
-  <Root store={store} routes={routes(QuivadeTheme)} />
-  // <Provider store={store}>
-  //   <ReduxRouter routes={routes(QuivadeTheme)} />
-  // </Provider>
+const rootNode = Base => (
+  <AppContainer>
+    <Base store={store} routes={routes(QuivadeTheme)} />
+  </AppContainer>
 )
 
-ReactDOM.render(node, rootElement)
+ReactDOM.render(rootNode(Root), rootElement)
+
+if (module.hot) {
+  module.hot.accept('./routes', () => {
+    routes = require('./routes').default
+    ReactDOM.render(
+      rootNode(Root),
+      rootElement
+    )
+  })
+}

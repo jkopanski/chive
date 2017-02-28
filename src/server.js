@@ -8,7 +8,7 @@ import { match, reduxReactRouter } from 'redux-router/server'
 import { createMemoryHistory } from 'history'
 import qs from 'query-string'
 
-import { Root } from './containers'
+import Root from './containers/Root'
 import configureStore from './store/configureStore'
 import { rootServerSaga } from './sagas'
 import routes from './routes'
