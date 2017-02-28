@@ -1,7 +1,9 @@
+import { delay } from 'redux-saga'
 import {
   call,
   fork,
   put,
+  select,
   take,
   takeEvery
 } from 'redux-saga/effects'
@@ -12,22 +14,30 @@ import {
   notifyRequest,
   simulationStart,
   simulationStatus,
+  simulationStatusRequest,
   simulationStop
 } from '../actions'
-import { Simulation } from '../constants/ActionTypes'
+import { Simulations } from '../constants/ActionTypes'
 import { api } from '../services'
 
-// export function * updateStatus () {
-//   while (true) {
-//     const simId = yield take(Simulation.status)
-//     const statusEither = yield call(api.simulationStatus, simId)
-//     yield put(simulationStatus(statusEither))
-//   }
-// }
+export function * updateStatus (action) {
+  const estatus = yield call(api.simulationStatus, action.payload.id)
+  yield put(simulationStatus(estatus))
+}
 
 export function * monitorSimulation (sid) {
-  const estatus = yield call(api.simulationStatus, sid)
-  yield put(simulationStatus(estatus))
+  let t = 30000
+  let status
+  const action = simulationStatusRequest(sid)
+  yield call(updateStatus, action)
+  do {
+    yield delay(t)
+    status = yield select(state =>
+      R.prop('status', R.find(R.propEq('id', sid), state.chive.simulations))
+    )
+    yield put(action)
+    if (t < 600000) t = t * 2
+  } while (status === 'running' || status === 'pending')
 }
 
 export function * simulationFlow (action) {
@@ -45,12 +55,12 @@ export function * simulationFlow (action) {
 }
 
 export function * startSimulation () {
-  yield takeEvery(Simulation.startRequest, simulationFlow)
+  yield takeEvery(Simulations.startRequest, simulationFlow)
 }
 
 export function * stopSimulation () {
   while (true) {
-    const simId = yield take(Simulation.stop)
+    const simId = yield take(Simulations.stop)
     const stopEither = yield call(api.simulationStop, simId)
     yield put(simulationStop(stopEither))
   }
@@ -58,8 +68,8 @@ export function * stopSimulation () {
 
 export function * simulations () {
   yield [
-    takeEvery(Simulation.startRequest, simulationFlow),
-    // fork(updateStatus),
+    takeEvery(Simulations.startRequest, simulationFlow),
+    takeEvery(Simulations.statusRequest, updateStatus),
     fork(stopSimulation)
   ]
 }

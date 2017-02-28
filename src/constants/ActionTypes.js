@@ -39,5 +39,6 @@ export const Simulations = {
   startRequest: 'simulationStartRequest',
   start: 'simulationStart',
   stop: 'simulationStop',
+  statusRequest: 'simulationStatusRequest',
   status: 'simulationStatus'
 }

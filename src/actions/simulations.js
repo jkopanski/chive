@@ -1,15 +1,17 @@
-// use internal, ripped of create action so it plays well with Either
+/* @flow */
 import createAction from './createAction'
 import { Simulations } from '../constants/ActionTypes'
 import { Either } from 'ramda-fantasy'
 import R from 'ramda'
 
-export const simulationStartRequest = createAction(
+import type { ActionCreator } from './index'
+
+export const simulationStartRequest: ActionCreator = createAction(
   Simulations.startRequest,
   (nid, nodes, file) => ({ netlist: nid, nodes: nodes, name: file })
 )
 
-export const simulationStart = createAction(
+export const simulationStart: ActionCreator = createAction(
   Simulations.start,
   simId => Either.either(
     error => new Error(error),
@@ -18,7 +20,12 @@ export const simulationStart = createAction(
   )
 )
 
-export const simulationStatus = createAction(
+export const simulationStatusRequest: ActionCreator = createAction(
+  Simulations.statusRequest,
+  sid => ({ id: sid })
+)
+
+export const simulationStatus: ActionCreator = createAction(
   Simulations.status,
   progress => Either.either(
     error => new Error(error),
@@ -27,7 +34,7 @@ export const simulationStatus = createAction(
   )
 )
 
-export const simulationStop = createAction(
+export const simulationStop: ActionCreator = createAction(
   Simulations.stop,
   res => Either.either(
     error => new Error(error),

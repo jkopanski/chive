@@ -1,3 +1,4 @@
+/* @flow */
 export * from './analysis'
 export * from './auth'
 export * from './netlists'
@@ -10,3 +11,5 @@ export type Action = {
   error: ?boolean,
   meta: ?Object
 }
+
+export type ActionCreator = Object => Action
