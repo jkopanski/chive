@@ -35,7 +35,7 @@ export const Output = {
 }
 
 // simulation related actions
-export const Simulation = {
+export const Simulations = {
   startRequest: 'simulationStartRequest',
   start: 'simulationStart',
   stop: 'simulationStop',

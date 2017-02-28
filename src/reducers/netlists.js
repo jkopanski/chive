@@ -1,6 +1,20 @@
+/**
+ * reducers/netlists.js
+ * @flow
+ */
 import { Netlists } from '../constants/ActionTypes'
 
-const netlists = (state = [], action) => {
+import type { Action } from '../actions'
+
+type Netlist = {
+  id: string,
+  filename: string
+}
+
+const netlists = (
+  state: Array<Netlist> = [],
+  action: Action):
+Array<Netlist> => {
   if (action.error) return state
 
   switch (action.type) {
