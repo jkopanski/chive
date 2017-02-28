@@ -23,12 +23,22 @@
   "scripts": {
     "bundle": "./node_modules/.bin/babel-node tools/run bundle",
     "lint": "eslint src tools",
-    "start": "./node_modules/.bin/babel-node tools/run start",
+    "start": "babel-node tools/run start",
     "test:init": "./node_modules/.bin/babel-node ./node_modules/.bin/tape  test/**/*.spec.js | ./node_modules/.bin/faucet",
     "test": "./node_modules/.bin/nyc --reporter=text npm run test:init",
     "test:report": "./node_modules/.bin/nyc report",
     "test:watch": "npm test -- --watch",
     "coveralls": "./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls"
+  },
+  "browserslist": [
+    ">1%",
+    "last 4 versions",
+    "Firefox ESR",
+    "not ie < 9"
+  ],
+  "engines": {
+    "node": ">=6.5",
+    "npm": ">=3.10"
   },
   "nyc": {
     "extension": [
@@ -60,11 +70,7 @@
     "redux-logger": "2.8.1",
     "redux-router": "2.1.2",
     "redux-saga": "0.14.3",
-    "source-map-support": "0.4.11",
-    "webpack": "1.13.1",
-    "webpack-dev-middleware": "1.10.1",
-    "webpack-hot-middleware": "2.17.0",
-    "webpack-middleware": "1.5.1"
+    "source-map-support": "0.4.11"
   },
   "devDependencies": {
     "assets-webpack-plugin": "^3.5.0",
@@ -73,10 +79,16 @@
     "babel-eslint": "^7.0.0",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-env": "^1.1.10",
     "babel-preset-react": "^6.5.0",
+    "babel-preset-react-optimize": "^1.0.1",
     "babel-preset-stage-0": "^6.5.0",
+    "babel-preset-stage-2": "^6.22.0",
+    "babel-register": "^6.23.0",
+    "babel-template": "^6.23.0",
+    "babel-types": "^6.23.0",
     "browser-sync": "^2.18.0",
+    "chokidar": "^1.6.1",
     "coveralls": "^2.11.0",
     "enzyme": "^2.7.0",
     "eslint": "^3.16.0",
@@ -90,18 +102,25 @@
     "eslint_d": "^4.0.0",
     "expect": "^1.20.0",
     "express": "^4.14.0",
-    "extract-text-webpack-plugin": "^1.0.1",
     "faucet": "0.0.1",
+    "glob": "^7.1.1",
     "istanbul": "^1.1.0-alpha.1",
     "json-loader": "^0.5.4",
     "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
     "nock": "^9.0.0",
     "nyc": "^10.1.0",
     "react-addons-test-utils": "^15.4.1",
+    "react-hot-loader": "^3.0.0-beta.6",
     "redux-devtools": "^3.3.0",
     "redux-devtools-dock-monitor": "^1.0.1",
     "redux-devtools-log-monitor": "^1.2.0",
     "redux-thunk": "^2.2.0",
-    "tape": "^4.6.0"
+    "rimraf": "^2.6.1",
+    "tape": "^4.6.0",
+    "webpack": "2.2.1",
+    "webpack-dev-middleware": "1.10.1",
+    "webpack-hot-middleware": "2.17.1",
+    "webpack-middleware": "1.5.1"
   }
 }

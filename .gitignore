@@ -1,4 +1,5 @@
 node_modules
+build
 dist
 bower_components
 test/coverage

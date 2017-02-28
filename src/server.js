@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React from 'react'
 import express from 'express'
 import path from 'path'
@@ -9,20 +8,20 @@ import { match, reduxReactRouter } from 'redux-router/server'
 import { createMemoryHistory } from 'history'
 import qs from 'query-string'
 
-import { port } from './config'
-import bundle from './bundle'
-
 import { Root } from './containers'
 import configureStore from './store/configureStore'
 import { rootServerSaga } from './sagas'
 import routes from './routes'
 import QuivadeTheme from './styles/theme'
 
+import { port } from './config'
+import assets from './assets.json'
+
 const server = express()
 
 server.use(express.static(path.join(__dirname, 'public')))
 
-const page = (element, state, js) => (`
+const page = (element, state, bundle, vendor) => (`
   <!doctype html>
   <html lang="en">
   <head>
@@ -44,7 +43,8 @@ const page = (element, state, js) => (`
     <script>
       window.__INITIAL_STATE__ = ${JSON.stringify(state)}
     </script>
-    <script src=${js}></script>
+    <script src=${bundle}></script>
+    <script src=${vendor}></script>
   </body>
   </html>
 `)
@@ -58,7 +58,7 @@ const getMarkup = store => {
     // </Provider>
   )
 
-  return page(markup, initialState, bundle.main.js)
+  return page(markup, initialState, assets.vendor.js, assets.client.js)
 }
 
 server.use((req, res) => {

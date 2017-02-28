@@ -1,111 +1,85 @@
 /**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
+* Based in part upon 'start.js'
+* from React Starter Kit (https://www.reactstarterkit.com/), which is:
+* Copyright © 2014-present Kriasoft, LLC. All rights reserved.
+*/
 
 import Browsersync from 'browser-sync'
 import webpack from 'webpack'
 import webpackMiddleware from 'webpack-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
-// import run from './run'
+// import WriteFilePlugin from 'write-file-webpack-plugin'
+import run from './run'
 import runServer from './runServer'
 import webpackConfig from './webpack.config'
-// import clean from './clean'
-// import copy from './copy'
+import clean from './clean'
+import copy from './copy'
 
-const DEBUG = !process.argv.includes('--release')
+const isDebug = !process.argv.includes('--release')
+const webConfig = webpackConfig[0]
 
 /**
  * Launches a development web server with "live reload" functionality -
  * synchronizing URLs, interactions and code changes across multiple devices.
  */
 async function start () {
-  // await run(clean)
-  // await run(copy.bind(undefined, { watch: true }))
+  await run(clean)
+  await run(copy)
   await new Promise(resolve => {
-    // Patch the client-side bundle configurations
-    // to enable Hot Module Replacement (HMR) and React Transform
-    // webpackConfig.filter(x => x.target !== 'node').forEach(config => {
-    //   console.error(config)
-      /* eslint-disable no-param-reassign */
-      // config.entry = ['webpack-hot-middleware/client'].concat(config.entry)
-      // config.output.filename = config.output.filename.replace('[chunkhash]', '[hash]')
-      // config.output.chunkFilename = config.output.chunkFilename.replace('[chunkhash]', '[hash]')
-      // config.plugins.push(new webpack.HotModuleReplacementPlugin())
-      // config.plugins.push(new webpack.NoErrorsPlugin())
-      // config
-      //   .module
-      //   .loaders
-      //   .filter(x => x.loader === 'babel-loader')
-      //   .forEach(x => (x.query = {
-      //     ...x.query,
+    // Save the server-side bundle files to the file system after compilation
+    // https://github.com/webpack/webpack-dev-server/issues/62
+    // serverConfig.plugins.push(new WriteFilePlugin({ log: false }))
 
-      //     // Wraps all React components into arbitrary transforms
-      //     // https://github.com/gaearon/babel-plugin-react-transform
-      //     plugins: [
-      //       ...(x.query ? x.query.plugins : []),
-      //       ['react-transform', {
-      //         transforms: [
-      //           {
-      //             transform: 'react-transform-hmr',
-      //             imports: ['react'],
-      //             locals: ['module']
-      //           }, {
-      //             transform: 'react-transform-catch-errors',
-      //             imports: ['react', 'redbox-react']
-      //           }
-      //         ]
-      //       }
-      //       ]
-      //     ]
-      //   }))
-      // /* eslint-enable no-param-reassign */
-    // })
+    if (isDebug) {
+      webConfig.entry.client = [...new Set([
+        'babel-polyfill',
+        'react-hot-loader/patch',
+        'webpack-hot-middleware/client'
+      ].concat(webConfig.entry.client))]
+      webConfig.output.filename =
+        webConfig.output.filename.replace('[chunkhash', '[hash')
+      webConfig.output.chunkFilename =
+        webConfig.output.chunkFilename.replace('[chunkhash', '[hash')
+      const { query } = webConfig.module.rules.find(x => x.loader === 'babel-loader')
+      query.plugins = ['react-hot-loader/babel'].concat(query.plugins || [])
+      webConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
+      webConfig.plugins.push(new webpack.NoEmitOnErrorsPlugin())
+    }
 
     const bundler = webpack(webpackConfig)
     const wpMiddleware = webpackMiddleware(bundler, {
-
       // IMPORTANT: webpack middleware can't access config,
       // so we should provide publicPath by ourselves
-      publicPath: webpackConfig[0].output.publicPath,
+      publicPath: webConfig.output.publicPath,
 
       // Pretty colored output
-      stats: webpackConfig[0].stats
+      stats: webConfig.stats
 
       // For other settings see
       // https://webpack.github.io/docs/webpack-dev-middleware
     })
-    const hotMiddlewares = bundler
-      .compilers
-      .filter(compiler => compiler.options.target !== 'node')
-      .map(compiler => webpackHotMiddleware(compiler))
+    const hotMiddleware = webpackHotMiddleware(bundler.compilers[0])
 
-    let handleServerBundleComplete = () => {
-      runServer((err, host) => {
-        if (!err) {
-          const bs = Browsersync.create()
-          bs.init({
-            ...(DEBUG ? {} : { notify: false, ui: false }),
+    let handleBundleComplete = async () => {
+      handleBundleComplete =
+        stats => !stats.stats[1].compilation.errors.length && runServer()
 
-            proxy: {
-              target: host,
-              middleware: [wpMiddleware, ...hotMiddlewares]
-            },
+      const server = await runServer()
+      const bs = Browsersync.create()
+      bs.init({
+        ...isDebug ? {} : { notify: false, ui: false },
 
-            // no need to watch '*.js' here, webpack will take care of it for us,
-            // including full page reloads if HMR won't work
-            files: ['build/content/**/*.*']
-          }, resolve)
-          handleServerBundleComplete = runServer
+        proxy: {
+          target: server.host,
+          middleware: [wpMiddleware, hotMiddleware],
+          proxyOptions: {
+            xfwd: true
+          }
         }
-      })
+      }, resolve)
     }
 
-    bundler.plugin('done', () => handleServerBundleComplete())
+    bundler.plugin('done', stats => handleBundleComplete(stats))
   })
 }
 
