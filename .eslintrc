@@ -9,8 +9,7 @@
     "react"
   ],
   "rules": {
-    "arrow-parens": 0,
-    "babel/arrow-parens": [2, 'as-needed'],
+    "arrow-parens": [2, 'as-needed'],
     "jsx-quotes": ["error", "prefer-single"]
   },
   "globals": {

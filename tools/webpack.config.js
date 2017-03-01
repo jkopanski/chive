@@ -7,6 +7,7 @@
 import path from 'path'
 import webpack from 'webpack'
 import AssetsPlugin from 'assets-webpack-plugin'
+import FlowtypePlugin from 'flowtype-loader/plugin'
 import pkg from '../package.json'
 
 const isDebug = !process.argv.includes('--release')
@@ -26,6 +27,11 @@ const config = {
 
   module: {
     rules: [{
+      test: /\.jsx?$/,
+      enforce: 'pre',
+      loader: 'flowtype-loader',
+      exclude: /node_modules/
+    }, {
       test: /\.jsx?$/,
       loader: 'babel-loader',
       include: [
@@ -129,6 +135,8 @@ const webClient = {
       filename: 'assets.json',
       prettyPrint: true
     }),
+
+    new FlowtypePlugin(),
 
     // Move modules that occur in multiple entry chunks to a new entry chunk
     // (the commons chunk).
@@ -235,6 +243,8 @@ const serverConfig = {
       'process.env.BROWSER': false,
       __DEV__: isDebug
     }),
+
+    new FlowtypePlugin(),
 
     // Do not create separate chunks of the server bundle
     // https://webpack.github.io/docs/list-of-plugins.html#limitchunkcountplugin
