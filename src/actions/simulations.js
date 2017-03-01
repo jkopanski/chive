@@ -4,7 +4,7 @@ import { Simulations } from '../constants/ActionTypes'
 import { Either } from 'ramda-fantasy'
 import R from 'ramda'
 
-import type { ActionCreator } from './index'
+import type { ActionCreator } from '../types/actions'
 
 export const simulationStartRequest: ActionCreator = createAction(
   Simulations.startRequest,

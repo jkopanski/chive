@@ -1,10 +1,7 @@
-/**
- * reducers/netlists.js
- * @flow
- */
+/* @flow */
 import { Netlists } from '../constants/ActionTypes'
 
-import type { Action } from '../actions'
+import type { Action } from '../types/actions'
 
 type Netlist = {
   id: string,

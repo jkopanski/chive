@@ -5,20 +5,20 @@
 import { Simulations } from '../constants/ActionTypes'
 import R from 'ramda'
 
-import type { Action } from '../actions'
+import type { Action } from '../types/actions'
 
-type Status
+export type Status
   = 'pending'
   | 'running'
   | 'failed'
   | 'finished'
   | 'stopped'
 
-type Simulation = {
+export type Simulation = {
   id: string,
   netlist: string,
-  status: Status,
-  progress: number
+  progress: number,
+  status: Status
 }
 
 const simulations = (
