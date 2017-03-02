@@ -1,36 +1,32 @@
-import React, { Component, PropTypes } from 'react'
-
+/* @flow */
+import React from 'react'
 import List from 'material-ui/List'
 
 import SimulationEntry from './Entry'
 
-class SimulationsList extends Component {
-  static propTypes = {
-    simulations: PropTypes.array.isRequired
-  }
+import type { Simulations } from '../../types/simulations'
 
-  static defaultProps = {
-    simulations: []
-  }
-
-  render () {
-    let {
-      simulations
-    } = this.props
-
-    return (
-      <List>
-        {simulations.map(simulation =>
-          <SimulationEntry
-            key={simulation.id}
-            netlist={simulation.netlist}
-            uuid={simulation.id}
-            status={simulation.status}
-          />
-        )}
-      </List>
-    )
-  }
+export type Props = {
+  simulations: Simulations,
+  getResults: Function,
+  stopSimulation: Function
 }
 
-export default SimulationsList
+const SimulationList = ({
+  simulations,
+  getResults,
+  stopSimulation
+}: Props) => (
+  <List>
+    {simulations.map(simulation =>
+      <SimulationEntry
+        key={simulation.id}
+        simulation={simulation}
+        getResults={getResults}
+        stopSimulation={stopSimulation}
+      />
+    )}
+  </List>
+)
+
+export default SimulationList

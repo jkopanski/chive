@@ -2,33 +2,20 @@
  * reducers/suimulations.js
  * @flow
  */
-import { Simulations } from '../constants/ActionTypes'
+import { Simulations as Actions } from '../constants/ActionTypes'
 import R from 'ramda'
 
 import type { Action } from '../types/actions'
-
-export type Status
-  = 'pending'
-  | 'running'
-  | 'failed'
-  | 'finished'
-  | 'stopped'
-
-export type Simulation = {
-  id: string,
-  netlist: string,
-  progress: number,
-  status: Status
-}
+import type { Simulations } from '../types/simulations'
 
 const simulations = (
-  state: Array<Simulation> = [],
-  action: Action):
-Array<Simulation> => {
+  state: Simulations = [],
+  action: Action
+): Simulations => {
   if (action.error) return state
 
   switch (action.type) {
-    case Simulations.start:
+    case Actions.start:
       return [
         ...state, {
           id: action.payload.id,
@@ -37,7 +24,7 @@ Array<Simulation> => {
           progress: 0
         }
       ]
-    case Simulations.stop:
+    case Actions.stop:
       return R.over(
         // focus on sim with specified id
         R.lensIndex(R.findIndex(
@@ -49,7 +36,7 @@ Array<Simulation> => {
         ),
         state
       )
-    case Simulations.status:
+    case Actions.status:
       return R.over(
         // focus on sim with specified id
         R.lensIndex(R.findIndex(

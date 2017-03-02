@@ -17,7 +17,7 @@ import {
   simulationStatusRequest,
   simulationStop
 } from '../actions'
-import { Simulations } from '../constants/ActionTypes'
+import { Simulations as Actions } from '../constants/ActionTypes'
 import { api } from '../services'
 
 export function * updateStatus (action) {
@@ -55,12 +55,12 @@ export function * simulationFlow (action) {
 }
 
 export function * startSimulation () {
-  yield takeEvery(Simulations.startRequest, simulationFlow)
+  yield takeEvery(Actions.startRequest, simulationFlow)
 }
 
 export function * stopSimulation () {
   while (true) {
-    const simId = yield take(Simulations.stop)
+    const simId = yield take(Actions.stop)
     const stopEither = yield call(api.simulationStop, simId)
     yield put(simulationStop(stopEither))
   }
@@ -68,8 +68,8 @@ export function * stopSimulation () {
 
 export function * simulations () {
   yield [
-    takeEvery(Simulations.startRequest, simulationFlow),
-    takeEvery(Simulations.statusRequest, updateStatus),
+    takeEvery(Actions.startRequest, simulationFlow),
+    takeEvery(Actions.statusRequest, updateStatus),
     fork(stopSimulation)
   ]
 }

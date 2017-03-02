@@ -1,32 +1,30 @@
-import React, { Component, PropTypes } from 'react'
+/* @flow */
 import { connect } from 'react-redux'
 
-import SimulationsList from '../components/Simulations/List'
+import * as actions from '../actions/simulations'
+import SimulationList from '../components/Simulations/List'
 
-@connect(
-  state => ({ simulations: state.chive.simulations })
-)
-export default class Simulations extends Component {
-  static propTypes = {
-    children: PropTypes.node,
-    simulations: PropTypes.array.isRequired
-  };
+import type { Connector } from 'react-redux'
+import type { Dispatch } from '../types/actions'
 
-  static defaultProps = {
-    simulations: []
-  };
+import type { Props } from '../components/Simulations/List'
 
-  render () {
-    const {
-      children,
-      simulations
-    } = this.props
-
-    return (
-      <div>
-        <SimulationsList simulations={simulations} />
-        {children}
-      </div>
-    )
+const mapStateToProps = (state: Object) => {
+  return {
+    simulations: state.chive.simulations
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    getResults: id => { dispatch(actions.simulationStatusRequest(id)) },
+    stopSimulation: id => { dispatch(actions.simulationStatusRequest(id)) }
+  }
+}
+
+const connector: Connector<{}, Props> = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+
+export default connector(SimulationList)

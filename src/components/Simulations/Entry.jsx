@@ -1,57 +1,94 @@
-import React, { PropTypes } from 'react'
+/* @flow */
+import React from 'react'
 
-import FlatButton from 'material-ui/FlatButton'
-import { ListItem } from 'material-ui/List'
 import ActionDone from 'material-ui/svg-icons/action/done'
 import ActionHighlightOff from 'material-ui/svg-icons/action/highlight-off'
 import ActionAutorenew from 'material-ui/svg-icons/action/autorenew'
 import AVPlayArrow from 'material-ui/svg-icons/av/play-arrow'
+import RaisedButton from 'material-ui/RaisedButton'
+import LinearProgress from 'material-ui/LinearProgress'
+// import { ListItem } from 'material-ui/List'
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSeparator,
+  ToolbarTitle
+} from 'material-ui/Toolbar'
 
-const SimulationEntry = props => {
-  let disabled = false
-  let label, primary
+import type { SimId, Simulation } from '../../types/simulations'
+
+export type Props = {
+  simulation: Simulation,
+  stopSimulation: SimId => void,
+  getResults: SimId => void
+}
+
+const SimulationEntry = ({
+  simulation,
+  stopSimulation,
+  getResults
+}: Props) => {
+  let disabled: boolean = false
+  let label: string,
+    primary: boolean
   let statusIndicator = <ActionAutorenew />
+  let action: Function
 
-  switch (props.status) {
+  const {
+    id,
+    netlist,
+    status,
+    progress
+  } = simulation
+
+  switch (status) {
     case 'finished':
       label = 'results'
       primary = true
       statusIndicator = <ActionDone />
+      action = getResults
       break
     case 'running':
     case 'pending':
       label = 'stop'
       primary = false
       statusIndicator = <AVPlayArrow />
+      action = stopSimulation
       break
     case 'cancelled':
     default:
       label = 'results'
       disabled = true
       statusIndicator = <ActionHighlightOff />
+      action = getResults
   }
 
-  const button = <FlatButton
+  const button = <RaisedButton
     label={label}
     primary={primary && !disabled}
     secondary={!primary && !disabled}
     disabled={disabled}
+    onClick={() => action(id)}
   />
 
   return (
-    <ListItem
-      leftIcon={statusIndicator}
-      primaryText={`circuit: ${props.netlist}`}
-      secondaryText={`id: ${props.uuid}`}
-      rightIconButton={button}
-    />
+    <Toolbar>
+      <ToolbarGroup firstChild>
+        {statusIndicator}
+        <ToolbarTitle text={netlist} />
+      </ToolbarGroup>
+      <ToolbarGroup style={{
+        width: '100%',
+        maxWidth: '700px'
+      }}>
+        <LinearProgress mode='determinate' value={progress} />
+      </ToolbarGroup>
+      <ToolbarGroup lastChild>
+        <ToolbarSeparator />
+        {button}
+      </ToolbarGroup>
+    </Toolbar>
   )
-}
-
-SimulationEntry.propTypes = {
-  netlist: PropTypes.string.isRequired,
-  uuid: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired
 }
 
 export default SimulationEntry
