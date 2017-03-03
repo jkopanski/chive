@@ -56,7 +56,7 @@ export const copyDir = async (source, target) => {
     nosort: true,
     dot: true
   })
-  await Promise.all(dirs.map(async (dir) => {
+  await Promise.all(dirs.map(async dir => {
     const from = path.resolve(source, dir)
     const to = path.resolve(target, dir)
     await makeDir(path.dirname(to))

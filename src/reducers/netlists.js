@@ -1,7 +1,4 @@
 /* @flow */
-import { Netlists as Actions } from '../constants/ActionTypes'
-
-import type { Action } from '../types/actions'
 import type { Netlists, NetlistAction } from '../types/netlists'
 
 const netlists = (

@@ -1,6 +1,4 @@
 /* @flow */
-import type { Dispatch as ReduxDispatch } from 'redux'
-
 export type NetId = string
 
 export type NetlistActionType
