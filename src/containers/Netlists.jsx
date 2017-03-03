@@ -1,32 +1,32 @@
-import React, { Component, PropTypes } from 'react'
+/* @flow */
 import { connect } from 'react-redux'
 
-import NetlistsList from '../components/Netlists/List'
+import * as actions from '../actions/netlists'
+import NetlistList from '../components/Netlists/List'
 
-@connect(
-  state => ({ netlists: state.chive.netlists })
-)
-export default class Netlists extends Component {
-  static propTypes = {
-    children: PropTypes.node,
-    netlists: PropTypes.array.isRequired
-  };
+import type { Connector } from 'react-redux'
 
-  static defaultProps = {
-    netlists: []
-  };
+import type { Dispatch } from '../types/actions'
+import type { Props } from '../components/Netlists/List'
 
-  render () {
-    const {
-      children,
-      netlists
-    } = this.props
-
-    return (
-      <div>
-        <NetlistsList netlists={netlists} />
-        {children}
-      </div>
-    )
+const mapStateToProps = (state: Object) => {
+  return {
+    netlists: state.chive.netlists
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  netlistAdd: (name, file) => {
+    dispatch(actions.netlistUploadRequest(name, file))
+  },
+  simulateRequest: (id, procs) => {
+    dispatch(actions.netlistSimulateRequest(id, procs))
+  }
+})
+
+const connector: Connector<{}, Props> = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+
+export default connector(NetlistList)

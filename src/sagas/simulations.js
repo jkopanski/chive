@@ -39,8 +39,11 @@ export function * monitorSimulation (sid) {
 }
 
 export function * simulationSaga (action) {
-  const { netlist, nodes, name } = action.payload
-  const esim = yield call(api.netlistSimulate, netlist, nodes)
+  const { id, nodes } = action.payload
+  const esim = yield call(api.netlistSimulate, id, nodes)
+  const name = yield select(state =>
+    R.prop('filename', R.find(R.propEq('id', id), state.chive.netlists))
+  )
   yield put(simulationStart(
     esim.map(R.assoc('netlist', name))
   ))

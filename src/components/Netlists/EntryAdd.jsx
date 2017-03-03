@@ -1,20 +1,16 @@
-import React, { Component, PropTypes } from 'react'
+/* @flow */
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { connect } from 'react-redux'
 
 import { ListItem } from 'material-ui/List'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 
-import { netlistUploadRequest } from '../../actions'
+export type Props = {
+  netlistAdd: Function
+}
 
-@connect(
-  state => ({}),
-  { netlistUploadRequest }
-)
 class NetlistAddEntry extends Component {
-  static propTypes = {
-    netlistUploadRequest: PropTypes.func.isRequired
-  }
+  props: Props
 
   openFileDialog = () => {
     let fileUploadDom = ReactDOM.findDOMNode(this.refs.fileUpload)
@@ -25,7 +21,7 @@ class NetlistAddEntry extends Component {
     let reader = new FileReader()
     let file = event.target.files[0]
     reader.onload = ev => {
-      this.props.netlistUploadRequest(file.name, ev.target.result)
+      this.props.netlistAdd(file.name, ev.target.result)
     }
     reader.readAsText(file)
   }

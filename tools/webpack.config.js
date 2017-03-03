@@ -81,6 +81,20 @@ const config = {
     }]
   },
   resolve: {
+    // conflicts with external
+    // alias: { /* eslint-disable key-spacing */
+    //   actions:    path.resolve(__dirname, '../src/actions'),
+    //   components: path.resolve(__dirname, '../src/components'),
+    //   constants:  path.resolve(__dirname, '../src/constants'),
+    //   cotainers:  path.resolve(__dirname, '../src/containers'),
+    //   reducers:   path.resolve(__dirname, '../src/reducers'),
+    //   routes:     path.resolve(__dirname, '../src/routes'),
+    //   sagas:      path.resolve(__dirname, '../src/sagas'),
+    //   services:   path.resolve(__dirname, '../src/services'),
+    //   store:      path.resolve(__dirname, '../src/store'),
+    //   styles:     path.resolve(__dirname, '../src/style'),
+    //   types:      path.resolve(__dirname, '../src/types')
+    // }, /* eslint-enable */
     modules: [path.resolve(__dirname, '../src'), 'node_modules'],
     extensions: ['.webpack.js', '.web.js', '.js', '.jsx', '.json']
   },

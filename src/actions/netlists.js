@@ -6,7 +6,7 @@ import R from 'ramda'
 
 export const netlistSimulateRequest = createAction(
   Actions.simulateRequest,
-  id => ({ id: id })
+  (id, procs) => ({ id: id, nodes: procs })
 )
 
 export const netlistUploadRequest = createAction(

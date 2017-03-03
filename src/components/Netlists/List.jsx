@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+/* @flow */
+import React from 'react'
 
 import Divider from 'material-ui/Divider'
 import List from 'material-ui/List'
@@ -6,36 +7,32 @@ import List from 'material-ui/List'
 import NetlistEntry from './Entry'
 import NetlistEntryAdd from './EntryAdd'
 
-class NetlistsList extends Component {
-  static propTypes = {
-    netlists: PropTypes.array.isRequired
-  }
+import type { Netlists } from '../../types/netlists'
 
-  static defaultProps = {
-    netlists: []
-  }
-
-  render () {
-    let {
-      netlists
-    } = this.props
-
-    return (
-      <List>
-        {netlists.map(netlist =>
-          <div key={netlist.id}>
-            <NetlistEntry
-              filename={netlist.filename}
-              uuid={netlist.id}
-            />
-            <Divider />
-          </div>
-        )}
-        <Divider />
-        <NetlistEntryAdd />
-      </List>
-    )
-  }
+export type Props = {
+  netlists: Netlists,
+  netlistAdd: Function,
+  simulateRequest: Function
 }
 
-export default NetlistsList
+const NetlistList = ({
+  netlists,
+  netlistAdd,
+  simulateRequest
+}: Props) => (
+  <List>
+    {netlists.map(netlist =>
+      <div key={netlist.id}>
+        <NetlistEntry
+          netlist={netlist}
+          simulateRequest={simulateRequest}
+        />
+        <Divider />
+      </div>
+    )}
+    <Divider />
+    <NetlistEntryAdd netlistAdd={netlistAdd} />
+  </List>
+)
+
+export default NetlistList

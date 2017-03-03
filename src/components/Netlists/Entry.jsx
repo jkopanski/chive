@@ -1,52 +1,36 @@
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
+/* @flow */
+import React from 'react'
 
 import FlatButton from 'material-ui/FlatButton'
 import { ListItem } from 'material-ui/List'
 
-import { simulationStartRequest } from '../../actions'
+import type { NetId, Netlist } from '../../types/netlists'
 
-@connect(
-  state => ({}),
-  { simulationStartRequest }
-)
-class NetlistEntry extends Component {
-  static propTypes = {
-    filename: PropTypes.string.isRequired,
-    uuid: PropTypes.string.isRequired,
-    simulationStartRequest: PropTypes.func.isRequired
-  }
+export type Props = {
+  netlist: Netlist,
+  simulateRequest: (NetId, number) => void
+}
 
-  simulate = (id, procs, file) => {
-    let {
-      filename,
-      uuid,
-      simulationStartRequest
-    } = this.props
-    simulationStartRequest(uuid, 1, filename)
-  }
+const NetlistEntry = ({
+  netlist,
+  simulateRequest
+}: Props) => {
+  const { id, filename } = netlist
 
-  render () {
-    let {
-      filename,
-      uuid
-    } = this.props
+  const simButton =
+    <FlatButton
+      label='simulate'
+      secondary
+      onTouchTap={() => simulateRequest(id, 1)}
+    />
 
-    const simButton =
-      <FlatButton
-        label='simulate'
-        secondary
-        onTouchTap={this.simulate}
-      />
-
-    return (
-      <ListItem
-        primaryText={filename}
-        secondaryText={`id: ${uuid}`}
-        rightIconButton={simButton}
-      />
-    )
-  }
+  return (
+    <ListItem
+      primaryText={filename}
+      secondaryText={`id: ${id}`}
+      rightIconButton={simButton}
+    />
+  )
 }
 
 export default NetlistEntry
