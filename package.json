@@ -25,7 +25,7 @@
     "bundle": "babel-node tools/run bundle",
     "lint": "eslint src tools",
     "start": "babel-node tools/run start",
-    "test:init": "babel-node tape  test/**/*.spec.js | faucet",
+    "test:init": "babel-node ./node_modules/.bin/tape test/**/*.spec.js | faucet",
     "test": "nyc --reporter=text npm run test:init",
     "test:report": "nyc report",
     "test:watch": "npm test -- --watch",
