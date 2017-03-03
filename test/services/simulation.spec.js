@@ -17,7 +17,7 @@ test('simulation start/stop', assert => {
       'Accept': 'application/json',
       'Content-type': 'application/json'
     }}).log(console.log)
-  scope.post(`/simulations/start/${netId}`, body => {
+  scope.post(`/netlists/${netId}/simulate`, body => {
     assert.deepEqual(body, { nodes: procs },
       'simulation start should pass number of processes in the body')
     return true
@@ -46,7 +46,7 @@ test('simulation start/stop', assert => {
   )
   .then(e => {
     if (!scope.isDone()) {
-      assert.fail('there should be api call to /simulation/:id/stop by now')
+      assert.fail('there should be api call to /simulations/:id/stop by now')
     }
     assert.end()
   })
@@ -62,7 +62,7 @@ test('simulation status', assert => {
       'Accept': 'application/json',
       'Content-type': 'application/json'
     }}).log(console.log)
-  scope.post(`/simulations/start/${netId}`, body => {
+  scope.post(`/netlists/${netId}/simulate`, body => {
     assert.deepEqual(body, { nodes: procs },
       'simulation start should pass number of processes in the body')
     return true
