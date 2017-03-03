@@ -4,7 +4,6 @@ import {
   fork,
   put,
   select,
-  take,
   takeEvery
 } from 'redux-saga/effects'
 import R from 'ramda'
@@ -39,7 +38,7 @@ export function * monitorSimulation (sid) {
   } while (status === 'running' || status === 'pending')
 }
 
-export function * simulationFlow (action) {
+export function * simulationSaga (action) {
   const { netlist, nodes, name } = action.payload
   const esim = yield call(api.netlistSimulate, netlist, nodes)
   yield put(simulationStart(
@@ -53,18 +52,21 @@ export function * simulationFlow (action) {
   )
 }
 
-export function * stopSimulation () {
-  while (true) {
-    const simId = yield take('simulationStop')
-    const stopEither = yield call(api.simulationStop, simId)
-    yield put(simulationStop(stopEither))
+export function * stopSimulation (action) {
+  const { id } = action.payload
+  const estop = yield call(api.simulationStop, id)
+  yield put(simulationStop(estop))
+
+  if (estop.isLeft) {
+    yield put(notifyRequest('Failed to stop selected simulation'))
   }
 }
 
 export function * simulations () {
   yield [
-    takeEvery('netlistSimulateRequest', simulationFlow),
+    takeEvery('netlistSimulateRequest', simulationSaga),
     takeEvery('simulationStatusRequest', updateStatus),
+    takeEvery('simulationStopRequest', stopSimulation),
     fork(stopSimulation)
   ]
 }

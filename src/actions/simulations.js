@@ -34,6 +34,11 @@ export const simulationStatus: ActionCreator = createAction(
   )
 )
 
+export const simulationStopRequest: ActionCreator = createAction(
+  Simulations.stopRequest,
+  sid => ({ id: sid })
+)
+
 export const simulationStop: ActionCreator = createAction(
   Simulations.stop,
   res => Either.either(

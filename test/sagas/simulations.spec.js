@@ -1,49 +1,34 @@
 import test from 'tape'
 import {
   call,
-  fork,
-  put,
-  take,
-  takeEvery
+  put
 } from 'redux-saga/effects'
 import { Either } from 'ramda-fantasy'
 
 import {
+  notifyRequest,
   simulationStart,
   simulationStartRequest,
   simulationStatus,
-  simulationStop
+  simulationStatusRequest,
+  simulationStop,
+  simulationStopRequest
 } from '../../src/actions'
-import { Simulation } from '../../src/constants/ActionTypes'
 import {
   updateStatus,
-  startSimulation,
   stopSimulation,
-  simulationFlow,
   simulationSaga
 } from '../../src/sagas/simulations'
 import { api } from '../../src/services'
 
-test('simulation start generator', assert => {
-  const generator = startSimulation()
-
-  assert.deepEqual(
-    generator.next().value,
-    takeEvery(Simulation.startRequest, simulationFlow),
-    'wait for every simulation start request'
-  )
-
-  assert.end()
-})
-
-test('simulation flow', assert => {
+test('simulation saga', assert => {
   const nid = 'b4acdb77-8b8c-427c-a598-fee0567b4812'
   const sid = '348fcfef-29f5-4bfe-9328-b25a148092c9'
   const file = 'chip.cir'
   const procs = 5
 
   const generator =
-    simulationFlow(
+    simulationSaga(
       simulationStartRequest(nid, procs, file)
     )
 
@@ -58,7 +43,8 @@ test('simulation flow', assert => {
       Either.Right({ 'id': sid })
     ).value,
     put(simulationStart(
-      Either.Right({ 'id': sid, 'netlist': file }))),
+      Either.Right({ 'id': sid, 'netlist': file })
+    )),
     'successsful simulation start'
   )
 
@@ -66,17 +52,15 @@ test('simulation flow', assert => {
 })
 
 test('status update generator', assert => {
-  const generator = updateStatus()
+  const sid = '348fcfef-29f5-4bfe-9328-b25a148092c9'
 
-  assert.deepEqual(
-    generator.next().value,
-    take(Simulation.status),
-    'wait for status update request'
+  const generator = updateStatus(
+    simulationStatusRequest(sid)
   )
 
   assert.deepEqual(
-    generator.next('id').value,
-    call(api.simulationStatus, 'id'),
+    generator.next().value,
+    call(api.simulationStatus, sid),
     'call api with proper id'
   )
 
@@ -90,40 +74,35 @@ test('status update generator', assert => {
 })
 
 test('simulation stop generator', assert => {
-  const generator = stopSimulation()
+  const sid = '348fcfef-29f5-4bfe-9328-b25a148092c9'
 
-  assert.deepEqual(
-    generator.next().value,
-    take(Simulation.stop),
-    'wait for simulation stop request'
+  const generator = stopSimulation(
+    simulationStopRequest(sid)
   )
 
   assert.deepEqual(
-    generator.next('id').value,
-    call(api.simulationStop, 'id'),
+    generator.next().value,
+    call(api.simulationStop, sid),
     'call api with proper id'
   )
 
+  const res = Either.Left(new Error('some error'))
   assert.deepEqual(
-    generator.next(Either.Right({})).value,
-    put(simulationStop(Either.Right({}))),
-    'successsful simulation stop'
+    generator.next(res).value,
+    put(simulationStop(res)),
+    'simulation stop failed'
   )
-
-  assert.end()
-})
-
-test('simulation saga', assert => {
-  const generator = simulationSaga()
 
   assert.deepEqual(
     generator.next().value,
-    [
-      fork(updateStatus),
-      fork(startSimulation),
-      fork(stopSimulation)
-    ],
-    'should fork proper tasks'
+    put(notifyRequest('Failed to stop selected simulation')),
+    'display error message to the user'
+  )
+
+  assert.deepEqual(
+    generator.next(),
+    { done: true, value: undefined },
+    'finish generator'
   )
 
   assert.end()
