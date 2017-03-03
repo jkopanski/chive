@@ -21,14 +21,15 @@
     "url": "https://github.com/jkopanski/chive/issues"
   },
   "scripts": {
-    "bundle": "./node_modules/.bin/babel-node tools/run bundle",
+    "build": "babel-node tools/run build",
+    "bundle": "babel-node tools/run bundle",
     "lint": "eslint src tools",
     "start": "babel-node tools/run start",
-    "test:init": "./node_modules/.bin/babel-node ./node_modules/.bin/tape  test/**/*.spec.js | ./node_modules/.bin/faucet",
-    "test": "./node_modules/.bin/nyc --reporter=text npm run test:init",
-    "test:report": "./node_modules/.bin/nyc report",
+    "test:init": "babel-node tape  test/**/*.spec.js | faucet",
+    "test": "nyc --reporter=text npm run test:init",
+    "test:report": "nyc report",
     "test:watch": "npm test -- --watch",
-    "coveralls": "./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls"
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "browserslist": [
     ">1%",
@@ -49,6 +50,7 @@
   "dependencies": {
     "babel-polyfill": "6.23.0",
     "babel-runtime": "6.23.0",
+    "express": "4.14.1",
     "humps": "2.0.0",
     "isomorphic-fetch": "2.2.1",
     "jsdom": "9.11.0",
@@ -102,7 +104,6 @@
     "eslint-plugin-standard": "^2.0.0",
     "eslint_d": "^4.0.0",
     "expect": "^1.20.0",
-    "express": "^4.14.0",
     "faucet": "0.0.1",
     "flow-bin": "^0.40.0",
     "flow-static-land": "^0.2.6",

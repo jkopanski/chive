@@ -8,7 +8,7 @@ import rootReducer from '../reducers'
 
 const reducer = combineReducers({
   router: routerStateReducer,
-  rootReducer
+  chive: rootReducer
 })
 
 const configureStore = initialState => {

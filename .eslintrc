@@ -15,6 +15,7 @@
     "import/no-duplicates": 2
   },
   "globals": {
+    "__DEV__": true,
     "fetch": false,
     "FileReader": false,
     "FormData": false,

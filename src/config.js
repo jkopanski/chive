@@ -11,8 +11,9 @@ export const analytics = {
     trackingId: process.env.GOOGLE_TRACKING_ID || 'UA-XXXXX-X' }
 }
 
-let apiUrl = 'http://localhost:8087/'
-if (process.env.NODE_ENV === 'production') {
-  apiUrl = 'http://api.quivade.com/'
+let apiUrl = 'http://api.quivade.com/'
+if (__DEV__) {
+  apiUrl = 'http://localhost:8087/'
 }
+
 export { apiUrl }
