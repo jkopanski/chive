@@ -66,7 +66,6 @@ export function * simulations () {
   yield [
     takeEvery('netlistSimulateRequest', simulationSaga),
     takeEvery('simulationStatusRequest', updateStatus),
-    takeEvery('simulationStopRequest', stopSimulation),
-    fork(stopSimulation)
+    takeEvery('simulationStopRequest', stopSimulation)
   ]
 }

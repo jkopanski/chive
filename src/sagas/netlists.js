@@ -29,6 +29,6 @@ export function * netlistUploadSaga (
   }
 }
 
-export default function * netlists (): Generator<*, *, void> {
+export function * netlists (): Generator<*, *, void> {
   yield takeEvery('netlistUploadRequest', netlistUploadSaga)
 }

@@ -8,15 +8,15 @@ import { simulations } from './simulations'
 
 export function * rootClientSaga () {
   yield [
-    authClientSaga,
-    netlists,
-    notificationSaga,
-    simulations
+    authClientSaga(),
+    netlists(),
+    notificationSaga(),
+    simulations()
   ]
 }
 
 export function * rootServerSaga () {
   yield [
-    authServerSaga
+    authServerSaga()
   ]
 }
