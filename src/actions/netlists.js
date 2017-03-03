@@ -1,15 +1,21 @@
+/* @flow */
 import createAction from './createAction'
-import { Netlists } from '../constants/ActionTypes'
+import { Netlists as Actions } from '../constants/ActionTypes'
 import { Either } from 'ramda-fantasy'
 import R from 'ramda'
 
+export const netlistSimulateRequest = createAction(
+  Actions.simulateRequest,
+  id => ({ id: id })
+)
+
 export const netlistUploadRequest = createAction(
-  Netlists.uploadRequest,
+  Actions.uploadRequest,
   (name, file) => ({ filename: name, file: file })
 )
 
 export const netlistUpload = createAction(
-  Netlists.upload,
+  Actions.upload,
   response => Either.either(
     error => new Error(error),
     R.identity,

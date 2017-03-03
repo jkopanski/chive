@@ -12,12 +12,13 @@
   "rules": {
     "arrow-parens": [2, 'as-needed'],
     "jsx-quotes": ["error", "prefer-single"],
-    "no-duplicates"
+    "import/no-duplicates": 2
   },
   "globals": {
     "fetch": false,
     "FileReader": false,
     "FormData": false,
+    "Generator": true,
     "Headers": false,
     "localStorage": false,
     "Request": false,

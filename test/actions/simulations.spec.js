@@ -5,7 +5,6 @@ import {
   simulationStartRequest,
   simulationStart
 } from '../../src/actions'
-import { Simulation } from '../../src/constants/ActionTypes'
 
 test('simulations action creators', assert => {
   let nid = 'b4acdb77-8b8c-427c-a598-fee0567b4812'
@@ -14,7 +13,7 @@ test('simulations action creators', assert => {
 
   assert.deepEqual(
     simulationStartRequest(nid, nodes, file),
-    { type: Simulation.startRequest,
+    { type: 'simulationStartRequest',
       payload: {
         netlist: nid,
         nodes: nodes,
@@ -28,7 +27,7 @@ test('simulations action creators', assert => {
       id: 'b4acdb77-8b8c-427c-a598-fee0567b4812',
       netlist: 'test.cir'
     })),
-    { type: Simulation.start,
+    { type: 'simulationStart',
       payload: {
         id: 'b4acdb77-8b8c-427c-a598-fee0567b4812',
         netlist: 'test.cir'
@@ -38,7 +37,7 @@ test('simulations action creators', assert => {
 
   assert.deepEqual(
     simulationStart(Either.Left('test msg')),
-    { type: Simulation.start,
+    { type: 'simulationStart',
       error: true,
       payload: new Error('test msg')
     }, 'create proper failed uplad action'

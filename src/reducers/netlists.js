@@ -1,21 +1,17 @@
 /* @flow */
-import { Netlists } from '../constants/ActionTypes'
+import { Netlists as Actions } from '../constants/ActionTypes'
 
 import type { Action } from '../types/actions'
-
-type Netlist = {
-  id: string,
-  filename: string
-}
+import type { Netlists, NetlistAction } from '../types/netlists'
 
 const netlists = (
-  state: Array<Netlist> = [],
-  action: Action):
-Array<Netlist> => {
+  state: Netlists = [],
+  action: NetlistAction
+): Netlists => {
   if (action.error) return state
 
   switch (action.type) {
-    case Netlists.upload:
+    case 'netlistUpload':
       return [
         ...state, {
           id: action.payload.id,

@@ -1,3 +1,4 @@
+/* @flow */
 // analysis options setup actions
 export const Analysis = {
   add: 'analysisAdd',
@@ -16,7 +17,8 @@ export const Auth = {
 // netlist manipulation actions
 export const Netlists = {
   uploadRequest: 'netlistUploadRequest',
-  upload: 'netlistUpload'
+  upload: 'netlistUpload',
+  simulateRequest: 'netlistSimulateRequest'
 }
 
 // notification related actions

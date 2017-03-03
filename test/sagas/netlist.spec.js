@@ -1,35 +1,30 @@
 import test from 'tape'
 import {
   call,
-  put,
-  take
+  put
 } from 'redux-saga/effects'
 import { Either } from 'ramda-fantasy'
 
 import {
   netlistUpload,
+  netlistUploadRequest,
   notifyRequest
 } from '../../src/actions'
-import { Netlists } from '../../src/constants/ActionTypes'
-import { netlists } from '../../src/sagas/netlists'
+import { netlistUploadSaga } from '../../src/sagas/netlists'
 import { api } from '../../src/services'
 
 test('netlist upload flow', assert => {
-  const generator = netlists()
+  const generator = netlistUploadSaga(
+    netlistUploadRequest('test.cir', 'content')
+  )
 
   assert.deepEqual(
     generator.next().value,
-    take(Netlists.uploadRequest),
-    'create upload request'
-  )
-
-  assert.deepEqual(
-    generator.next({ payload: { file: 'sample' }}).value,
-    call(api.netlistUpload, 'sample'),
+    call(api.netlistUpload, 'content'),
     'call api'
   )
 
-  let res = Either.Left('error')
+  let res = Either.Left(new Error('test error'))
   assert.deepEqual(
     generator.next(res).value,
     put(netlistUpload(res)),
@@ -43,9 +38,9 @@ test('netlist upload flow', assert => {
   )
 
   assert.deepEqual(
-    generator.next().value,
-    take(Netlists.uploadRequest),
-    'take another upload request'
+    generator.next(),
+    { done: true, value: undefined },
+    'finish generator'
   )
 
   assert.end()

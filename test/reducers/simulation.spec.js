@@ -1,7 +1,6 @@
 import test from 'tape'
 
 import simulations from '../../src/reducers/simulations'
-import { Simulation } from '../../src/constants/ActionTypes'
 
 let sims = [{
   id: '0',
@@ -26,7 +25,7 @@ test('simulations reducer', assert => {
 
   assert.deepEqual(
     simulations(sims, {
-      type: Simulation.start,
+      type: 'simulationStart',
       payload: {
         id: 'random',
         netlist: 'test.cir'
@@ -42,7 +41,7 @@ test('simulations reducer', assert => {
 
   assert.deepEqual(
     simulations(sims, {
-      type: Simulation.stop,
+      type: 'simulationStop',
       payload: {
         id: '1',
         status: 'cancelled'
@@ -58,7 +57,7 @@ test('simulations reducer', assert => {
 
   assert.deepEqual(
     simulations(sims, {
-      type: Simulation.status,
+      type: 'simulationStatus',
       payload: {
         id: '1',
         status: 'running',

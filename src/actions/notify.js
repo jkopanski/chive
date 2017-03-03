@@ -1,3 +1,4 @@
+/* @flow */
 // use internal, ripped of create action so it plays well with Either
 import createAction from './createAction'
 import { Notification } from '../constants/ActionTypes'

@@ -8,5 +8,12 @@ export type Action = {
   +meta: ?Object
 }
 
+export type ErrorAction = {
+  type: string,
+  payload: Error,
+  error: true,
+  +meta: ?Object
+}
+
 export type ActionCreator = Object => Action
 export type Dispatch = ReduxDispatch<Action>
