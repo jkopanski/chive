@@ -1,20 +1,28 @@
 import test from 'tape'
 import {
   call,
-  put
+  put,
+  select
 } from 'redux-saga/effects'
+import R from 'ramda'
 import { Either } from 'ramda-fantasy'
 
 import {
+  netlistSimulateRequest,
   notifyRequest,
   simulationStart,
-  simulationStartRequest,
   simulationStatus,
   simulationStatusRequest,
   simulationStop,
   simulationStopRequest
 } from '../../src/actions'
 import {
+  netlistsSelector,
+  simulationsSelector
+} from '../../src/reducers/selectors'
+import {
+  getFilename,
+  monitorSimulation,
   updateStatus,
   stopSimulation,
   simulationSaga
@@ -29,7 +37,7 @@ test('simulation saga', assert => {
 
   const generator =
     simulationSaga(
-      simulationStartRequest(nid, procs, file)
+      netlistSimulateRequest(nid, procs, file)
     )
 
   assert.deepEqual(
@@ -38,16 +46,40 @@ test('simulation saga', assert => {
     'call api endpoint'
   )
 
+  const store = {
+    chive: {
+      netlists: [
+        { id: nid, filename: file },
+        { id: sid, filename: 'wrong.cir' }
+      ]
+    }
+  }
   assert.deepEqual(
-    generator.next(
-      Either.Right({ 'id': sid })
-    ).value,
+    generator.next(Either.Right({ id: sid })).value,
+    select(netlistsSelector),
+    'get netlist filename based on id'
+  )
+
+  assert.deepEqual(
+    generator.next(store).value,
+    call(getFilename, nid, store)
+  )
+
+  assert.deepEqual(
+    generator.next(file).value,
     put(simulationStart(
-      Either.Right({ 'id': sid, 'netlist': file })
+      Either.Right({ id: sid, netlist: file })
     )),
     'successsful simulation start'
   )
 
+  assert.deepEqual(
+    generator.next().value,
+    call(monitorSimulation, sid),
+    'check simulation status periodically'
+  )
+
+  assert.ok(generator.next().done, 'must finish')
   assert.end()
 })
 

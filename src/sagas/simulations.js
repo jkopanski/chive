@@ -10,6 +10,10 @@ import R from 'ramda'
 import { Either } from 'ramda-fantasy'
 
 import {
+  netlistsSelector,
+  simulationsSelector
+} from '../reducers/selectors'
+import {
   notifyRequest,
   simulationStart,
   simulationStatus,
@@ -38,12 +42,15 @@ export function * monitorSimulation (sid) {
   } while (status === 'running' || status === 'pending')
 }
 
+export const getFilename = (id, state) =>
+  R.prop('filename', R.find(R.propEq('id', id), state))
+
 export function * simulationSaga (action) {
   const { id, nodes } = action.payload
   const esim = yield call(api.netlistSimulate, id, nodes)
-  const name = yield select(state =>
-    R.prop('filename', R.find(R.propEq('id', id), state.chive.netlists))
-  )
+  const nets = yield select(netlistsSelector)
+  const name = yield call(getFilename, id, nets)
+
   yield put(simulationStart(
     esim.map(R.assoc('netlist', name))
   ))
