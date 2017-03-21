@@ -3,9 +3,9 @@ import type { Dispatch as ReduxDispatch } from 'redux'
 
 export type Action = {
   type: string,
-  +payload: Object,
-  +error: ?boolean,
-  +meta: ?Object
+  payload?: any,
+  error?: boolean,
+  meta?: any
 }
 
 export type ErrorAction = {

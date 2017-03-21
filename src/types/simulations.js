@@ -1,5 +1,7 @@
 /* @flow */
-export type SimId = string
+import type { NetlistId } from './netlists'
+
+export type SimulationId = string
 
 export type Status
   = 'pending'
@@ -9,8 +11,8 @@ export type Status
   | 'stopped'
 
 export type Simulation = {
-  id: string,
-  netlist: string,
+  id: SimulationId,
+  netlist: NetlistId,
   progress: number,
   status: Status
 }

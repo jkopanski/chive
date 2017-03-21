@@ -1,49 +1,68 @@
 /* @flow */
-import createAction from './createAction'
-import { Simulations } from '../constants/ActionTypes'
-import { Either } from 'ramda-fantasy'
-import R from 'ramda'
+import { eitherToAction } from './index'
 
-import type { ActionCreator } from '../types/actions'
+import type { Either } from 'flow-static-land/lib/Either'
+import type { Simulation, SimulationId } from '../types/simulations'
 
-export const simulationStartRequest: ActionCreator = createAction(
-  Simulations.startRequest,
-  (nid, nodes, file) => ({ netlist: nid, nodes: nodes, name: file })
-)
+export type Action
+  = Start
+  | StatusRequest
+  | Status
+  | StopRequest
+  | Stop
 
-export const simulationStart: ActionCreator = createAction(
-  Simulations.start,
-  simId => Either.either(
-    error => new Error(error),
-    R.identity,
-    simId
-  )
-)
+export type Start
+  = { type: 'simulationStart'
+    , payload: Simulation
+    }
+  | { type: 'simulationStart'
+    , error: true
+    , payload: Error
+    }
 
-export const simulationStatusRequest: ActionCreator = createAction(
-  Simulations.statusRequest,
-  sid => ({ id: sid })
-)
+export type StatusRequest = {
+  type: 'simulationStatusRequest',
+  payload: { id: SimulationId }
+}
 
-export const simulationStatus: ActionCreator = createAction(
-  Simulations.status,
-  progress => Either.either(
-    error => new Error(error),
-    R.identity,
-    progress
-  )
-)
+export type Status
+  = { type: 'simulationStatus'
+    , payload: Simulation
+    }
+  | { type: 'simulationStatus'
+    , error: true
+    , payload: Error
+    }
 
-export const simulationStopRequest: ActionCreator = createAction(
-  Simulations.stopRequest,
-  sid => ({ id: sid })
-)
+export type StopRequest = {
+  type: 'simulationStopRequest',
+  payload: { id: SimulationId }
+}
 
-export const simulationStop: ActionCreator = createAction(
-  Simulations.stop,
-  res => Either.either(
-    error => new Error(error),
-    id => ({ simulationId: id }),
-    res
-  )
-)
+export type Stop
+  = { type: 'simulationStop'
+    , payload: Simulation
+    }
+  | { type: 'simulationStop'
+    , error: true
+    , payload: Error
+    }
+
+export const start: Either<Error, Simulation> => Start =
+  ((eitherToAction('simulationStart')): (Either<Error, Simulation> => any))
+
+export const statusRequest = (id: SimulationId): StatusRequest => ({
+  type: 'simulationStatusRequest',
+  payload: { id }
+})
+
+export const status: Either<Error, Simulation> => Status =
+  ((eitherToAction('simulationStatus')): (Either<Error, Simulation> => any))
+
+export const stopRequest = (id: SimulationId): StopRequest => ({
+  type: 'simulationStopRequest',
+  payload: { id }
+})
+
+export const stop: Either<Error, Simulation> => Stop =
+  ((eitherToAction('simulationStop')): (Either<Error, Simulation> => any))
