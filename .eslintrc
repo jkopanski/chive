@@ -7,12 +7,14 @@
   "plugins": [
     "babel",
     "react",
+    "flowtype",
     "import"
   ],
   "rules": {
     "arrow-parens": [2, 'as-needed'],
     "jsx-quotes": ["error", "prefer-single"],
     "no-duplicate-imports": 0,
+    "flowtype/define-flow-type": 2,
     "import/no-duplicates": 2
   },
   "globals": {
