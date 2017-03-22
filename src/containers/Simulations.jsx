@@ -5,7 +5,7 @@ import * as actions from '../actions/simulations'
 import SimulationList from '../components/Simulations/List'
 
 import type { Connector } from 'react-redux'
-import type { Dispatch } from '../types/actions'
+import type { Dispatch } from '../reducers/simulations'
 
 import type { Props } from '../components/Simulations/List'
 
@@ -17,8 +17,8 @@ const mapStateToProps = (state: Object) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    getResults: id => { dispatch(actions.simulationStatusRequest(id)) },
-    stopSimulation: id => { dispatch(actions.simulationStatusRequest(id)) }
+    getResults: id => { dispatch(actions.statusRequest(id)) },
+    stopSimulation: id => { dispatch(actions.stopRequest(id)) }
   }
 }
 

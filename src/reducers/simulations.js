@@ -1,21 +1,26 @@
-/**
- * reducers/suimulations.js
- * @flow
- */
-import { Simulations as Actions } from '../constants/ActionTypes'
+/* @flow */
+import type {
+  Dispatch as ReduxDispatch,
+  Store as ReduxStore
+} from 'redux'
+
 import R from 'ramda'
 
-import type { Action } from '../types/actions'
-import type { Simulations } from '../types/simulations'
+import type { Action } from '../actions/simulations'
+import type { Simulation } from '../types/simulations'
+
+export type State = Array<Simulation>
+export type Store = ReduxStore<State, Action>
+export type Dispatch = ReduxDispatch<Action>
 
 const simulations = (
-  state: Simulations = [],
+  state: State = [],
   action: Action
-): Simulations => {
+): State => {
   if (action.error) return state
 
   switch (action.type) {
-    case Actions.start:
+    case 'simulationStart':
       return [
         ...state, {
           id: action.payload.id,
@@ -24,7 +29,7 @@ const simulations = (
           progress: 0
         }
       ]
-    case Actions.stop:
+    case 'simulationStop':
       return R.over(
         // focus on sim with specified id
         R.lensIndex(R.findIndex(
@@ -36,7 +41,7 @@ const simulations = (
         ),
         state
       )
-    case Actions.status:
+    case 'simulationStatus':
       return R.over(
         // focus on sim with specified id
         R.lensIndex(R.findIndex(

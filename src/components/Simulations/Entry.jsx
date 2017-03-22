@@ -15,12 +15,12 @@ import {
   ToolbarTitle
 } from 'material-ui/Toolbar'
 
-import type { SimId, Simulation } from '../../types/simulations'
+import type { SimulationId, Simulation } from '../../types/simulations'
 
 export type Props = {
   simulation: Simulation,
-  stopSimulation: SimId => void,
-  getResults: SimId => void
+  stopSimulation: SimulationId => void,
+  getResults: SimulationId => void
 }
 
 const SimulationEntry = ({
