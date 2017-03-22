@@ -1,13 +1,12 @@
 import React from 'react'
 import express from 'express'
 import path from 'path'
-import { renderToString } from 'react-dom/server'
-// import { Provider } from 'react-redux'
-// import { ReduxRouter } from 'redux-router'
+import { renderToString, renderToStaticMarkup } from 'react-dom/server'
 import { match, reduxReactRouter } from 'redux-router/server'
 import { createMemoryHistory } from 'history'
 import qs from 'query-string'
 
+import Html from './containers/Html'
 import Root from './containers/Root'
 import configureStore from './store/configureStore'
 import { rootServerSaga } from './sagas'
@@ -21,44 +20,19 @@ const server = express()
 
 server.use(express.static(path.join(__dirname, 'public')))
 
-const page = (element, state, bundle, vendor) => (`
-  <!doctype html>
-  <html lang="en">
-  <head>
-    <title>Chive</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
-    <!-- Material icons font hosted by Google -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <style type="text/css">
-      html, body {
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root" class="chive" style="height: 100%"><div>${element}</div></div>
-    <script>
-      window.__INITIAL_STATE__ = ${JSON.stringify(state)}
-    </script>
-    <script src=${bundle}></script>
-    <script src=${vendor}></script>
-  </body>
-  </html>
-`)
-
-const getMarkup = store => {
-  const initialState = store.getState()
-  const markup = renderToString(
-    <Root store={store} key='provider' type='server' />
-    // <Provider store={store} key='provider'>
-    //   <ReduxRouter />
-    // </Provider>
-  )
-
-  return page(markup, initialState, assets.vendor.js, assets.client.js)
+const getRenderData = store => {
+  return {
+    title: 'Chive',
+    description: 'Spice simulation in the cloud',
+    scripts: [
+      assets.vendor.js,
+      assets.client.js
+    ],
+    state: store.getState(),
+    children: renderToString(
+      <Root store={store} key='provider' type='server' />
+    )
+  }
 }
 
 server.use((req, res) => {
@@ -87,7 +61,9 @@ server.use((req, res) => {
     } else {
       store.runSaga(rootServerSaga).done.then(() => {
         console.log('sagas complete')
-        res.status(200).send(getMarkup(store))
+        const data = getRenderData(store)
+        const html = renderToStaticMarkup(<Html {...data} />)
+        res.status(200).send(`<!doctype html>${html}`)
       }).catch(error => {
         console.error(error.message)
         res.status(500).send(error.message)
