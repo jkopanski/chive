@@ -4,11 +4,11 @@ import React from 'react'
 import FlatButton from 'material-ui/FlatButton'
 import { ListItem } from 'material-ui/List'
 
-import type { NetId, Netlist } from '../../types/netlists'
+import type { NetlistId, Netlist } from '../../types/netlists'
 
 export type Props = {
   netlist: Netlist,
-  simulateRequest: (NetId, number) => void
+  simulateRequest: (NetlistId, number) => void
 }
 
 const NetlistEntry = ({

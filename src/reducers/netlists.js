@@ -1,10 +1,20 @@
 /* @flow */
-import type { Netlists, NetlistAction } from '../types/netlists'
+import type {
+  Dispatch as ReduxDispatch,
+  Store as ReduxStore
+} from 'redux'
+
+import type { Action } from '../actions/netlists'
+import type { Netlist } from '../types/netlists'
+
+export type State = Array<Netlist>
+export type Store = ReduxStore<State, Action>
+export type Dispatch = ReduxDispatch<Action>
 
 const netlists = (
-  state: Netlists = [],
-  action: NetlistAction
-): Netlists => {
+  state: State = [],
+  action: Action
+): State => {
   if (action.error) return state
 
   switch (action.type) {

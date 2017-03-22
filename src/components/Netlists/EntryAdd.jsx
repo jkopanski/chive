@@ -17,8 +17,9 @@ class NetlistAddEntry extends Component {
     fileUploadDom.click()
   }
 
-  handleUpload = event => {
+  handleUpload = (event: Event) => {
     let reader = new FileReader()
+    // $FlowFixMe: What type shoult event have? Event?
     let file = event.target.files[0]
     reader.onload = ev => {
       this.props.netlistAdd(file.name, ev.target.result)

@@ -6,7 +6,7 @@ import NetlistList from '../components/Netlists/List'
 
 import type { Connector } from 'react-redux'
 
-import type { Dispatch } from '../types/actions'
+import type { Dispatch } from '../reducers/netlists'
 import type { Props } from '../components/Netlists/List'
 
 const mapStateToProps = (state: Object) => {
@@ -16,11 +16,11 @@ const mapStateToProps = (state: Object) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  netlistAdd: (name, file) => {
-    dispatch(actions.netlistUploadRequest(name, file))
+  netlistAdd: (name: string, file: string) => {
+    dispatch(actions.uploadRequest(name, file))
   },
   simulateRequest: (id, procs) => {
-    dispatch(actions.netlistSimulateRequest(id, procs))
+    dispatch(actions.simulateRequest(id, procs))
   }
 })
 
