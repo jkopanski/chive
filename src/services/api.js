@@ -1,60 +1,13 @@
-// import 'isomorphic-fetch'
-import { normalize } from 'normalizr'
-import { camelizeKeys } from 'humps'
+import Future from 'fluture'
 import R from 'ramda'
-import { Either } from 'ramda-fantasy'
+import { left, right } from 'flow-static-land/lib/Either'
 
-import { apiUrl } from '../config'
-// import { netlistSchema } from '../constants'
+import call from './call'
 
-function makeFullUrl (endpoint) {
-  const fullUrl = (endpoint.indexOf(apiUrl) === -1)
-    ? apiUrl + endpoint
-    : endpoint
+const eitherFold = Future.fold(left, right)
 
-  return fullUrl
-}
-
-// Fetches an API response and normalizes the result JSON according to schema.
-// This makes every API response have the same shape,
-// regardless of how nested it was.
-const callApi = R.curry((options, endpoint, schema) => {
-  const fullUrl = makeFullUrl(endpoint)
-  const norm = R.curry(normalize)
-  const handleResponse = R.compose(
-    norm(R.__, schema),
-    camelizeKeys
-  )
-
-  let opt = options
-  // make it const for now
-  // const token = window.localStorage.getItem('Auth')
-  const token = 'Basic ' + window.btoa('admin:admin')
-  if (token) {
-    opt = R.over(
-      R.lensProp('headers'),
-      R.assoc('Authorization', token),
-      options
-    )
-  }
-
-  return fetch(fullUrl, opt)
-    .then(response => {
-      if (!response.ok) {
-        return Promise.reject(response.statusText)
-      }
-      return response.json().then(json => {
-        return handleResponse(json)
-      })
-    })
-    .then(
-      response => Either.Right(response),
-      error => Either.Left(error)
-    )
-})
-
-export const authenticate = (user, pass) => {
-  return callApi({
+export const authenticate = (user, pass) => eitherFold(
+  call({
     method: 'post',
     headers: {
       'Accept': 'application/json',
@@ -65,17 +18,15 @@ export const authenticate = (user, pass) => {
       'password': pass
     })
   }, 'login', {})
-  .then(e =>
-    e.map(R.compose(R.prop('sessionId'), R.prop('result')))
-  )
-}
+  .map(R.compose(R.prop('sessionId'), R.prop('result')))
+)
 
-export const netlistUpload = fileInput => {
+export const netlistUpload = fileInput => eitherFold(
   // TODO: backend does not yet support multipart-form data
   // let data = new FormData()
   // data.append('netlist', fileInput)
 
-  return callApi({
+  call({
     method: 'post',
     headers: {
       'Accept': 'application/json',
@@ -83,13 +34,11 @@ export const netlistUpload = fileInput => {
     },
     body: fileInput
   }, 'netlists/upload', {})
-  .then(e =>
-    e.map(R.prop('result'))
-  )
-}
+  .map(R.prop('result'))
+)
 
-export const netlistSimulate = (nid, nodes) => {
-  return callApi({
+export const netlistSimulate = (nid, nodes) => eitherFold(
+  call({
     method: 'post',
     headers: {
       'Accept': 'application/json',
@@ -97,13 +46,11 @@ export const netlistSimulate = (nid, nodes) => {
     },
     body: JSON.stringify({nodes: nodes})
   }, `netlists/${nid}/simulate`, {})
-  .then(e =>
-    e.map(R.prop('result'))
-  )
-}
+  .map(R.prop('result'))
+)
 
-export const simulationStop = simId => {
-  return callApi({
+export const simulationStop = simId => eitherFold(
+  call({
     method: 'get',
     headers: {
       'Accept': 'application/json',
@@ -111,20 +58,16 @@ export const simulationStop = simId => {
     },
     body: {}
   }, `simulations/${simId}/stop`, {})
-  .then(e =>
-    e.map(R.prop('result'))
-  )
-}
+  .map(R.prop('result'))
+)
 
-export const simulationStatus = simId => {
-  return callApi({
+export const simulationStatus = simId => eitherFold(
+  call({
     method: 'get',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     }
   }, `simulations/${simId}`, {})
-  .then(e =>
-    e.map(R.prop('result'))
-  )
-}
+  .map(R.prop('result'))
+)
