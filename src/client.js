@@ -4,10 +4,12 @@ import { AppContainer } from 'react-hot-loader'
 import { reduxReactRouter } from 'redux-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import createHistory from 'history/lib/createBrowserHistory'
+import { createEpicMiddleware } from 'redux-observable'
 
 import Root from './containers/Root'
 import configureStore from './store/configureStore'
 import { rootClientSaga } from './sagas'
+import { clientEpic } from './epics'
 import QuivadeTheme from './styles/theme'
 
 // Needed for onTouchTap
@@ -16,11 +18,12 @@ import QuivadeTheme from './styles/theme'
 // https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin()
 
+const epicMiddleware = createEpicMiddleware(clientEpic)
 // It is different store enhancer
 // than rendering server side
 const store = reduxReactRouter({
   createHistory
-})(configureStore)(window.__INITIAL_STATE__)
+})(configureStore)(epicMiddleware, window.__INITIAL_STATE__)
 store.runSaga(rootClientSaga)
 
 let routes = require('./routes').default

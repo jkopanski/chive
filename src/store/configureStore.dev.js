@@ -12,7 +12,7 @@ const reducer = combineReducers({
   chive: rootReducer
 })
 
-const configureStore = initialState => {
+const configureStore = (epicMiddleware, initialState) => {
   const sagaMiddleware = createSagaMiddleware()
   const store = createStore(
     reducer,
@@ -23,6 +23,7 @@ const configureStore = initialState => {
       //   history
       // }),
       applyMiddleware(
+        epicMiddleware,
         sagaMiddleware,
         createLogger(),
         thunk

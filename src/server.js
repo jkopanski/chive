@@ -1,15 +1,18 @@
+import 'isomorphic-fetch'
 import React from 'react'
 import express from 'express'
 import path from 'path'
 import { renderToString, renderToStaticMarkup } from 'react-dom/server'
 import { match, reduxReactRouter } from 'redux-router/server'
 import { createMemoryHistory } from 'history'
+import { createEpicMiddleware } from 'redux-observable'
 import qs from 'query-string'
 
 import Html from './containers/Html'
 import Root from './containers/Root'
 import configureStore from './store/configureStore'
 import { rootServerSaga } from './sagas'
+import { serverEpic } from './epics'
 import routes from './routes'
 import QuivadeTheme from './styles/theme'
 
@@ -40,10 +43,11 @@ server.use((req, res) => {
     { userAgent: req.headers['user-agent'] })
   // It is different store enjancer
   // then rendering client side
+  const epicMiddleware = createEpicMiddleware(serverEpic)
   const store = reduxReactRouter({
     routes: routes(theme),
     createHistory: createMemoryHistory
-  })(configureStore)({})
+  })(configureStore)(epicMiddleware, {})
   const query = qs.stringify(req.query)
   const url = req.path + (query.length ? '?' + query : '')
 

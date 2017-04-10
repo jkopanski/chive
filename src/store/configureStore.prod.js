@@ -11,13 +11,16 @@ const reducer = combineReducers({
   chive: rootReducer
 })
 
-const configureStore = initialState => {
+const configureStore = (epicMiddleware, initialState) => {
   const sagaMiddleware = createSagaMiddleware()
   const store = createStore(
     reducer,
     initialState,
     // compose(
-    applyMiddleware(sagaMiddleware)
+    applyMiddleware(
+      epicMiddleware,
+      sagaMiddleware
+    )
     //   reduxReactRouter({
     //     routes,
     //     createHistory
