@@ -34,7 +34,6 @@ export const netlistUpload = fileInput => eitherFold(
     },
     body: fileInput
   }, 'netlists/upload', {})
-  .map(R.prop('result'))
 )
 
 export const netlistSimulate = (nid, nodes) => eitherFold(

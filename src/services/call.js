@@ -4,6 +4,7 @@
  * @flow
  */
 import Future from 'fluture'
+import R from 'ramda'
 import { apiUrl } from '../config'
 
 import type { Either } from 'flow-static-land/lib/Either'
@@ -25,16 +26,29 @@ const makeFullUrl = (endpoint: Url): Url => {
 const call = <T>(
   options: Object,
   endpoint: Url
-): Api<T> =>
-  fletch(makeFullUrl(endpoint), options)
-  .chain(response => {
-    if (!response.ok) {
-      return Future.reject(
-        new Error(response.statusText)
-      )
-    } else {
-      return Future.fromPromise(_ => response.json(), 0)
-    }
-  })
+): Api<T> => {
+  let opt = options
+  // make it const for now
+  // const token = window.localStorage.getItem('Auth')
+  const token = 'Basic ' + window.btoa('admin:admin')
+  if (token) {
+    opt = R.over(
+      R.lensProp('headers'),
+      R.assoc('Authorization', token),
+      options
+    )
+  }
+
+  return fletch(makeFullUrl(endpoint), opt)
+    .chain(response => {
+      if (!response.ok) {
+        return Future.reject(
+          new Error(response.statusText)
+        )
+      } else {
+        return Future.fromPromise(_ => response.json(), 0)
+      }
+    })
+}
 
 export default call
