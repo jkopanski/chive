@@ -5,6 +5,7 @@ import { reduxReactRouter } from 'redux-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import createHistory from 'history/lib/createBrowserHistory'
 import { createEpicMiddleware } from 'redux-observable'
+import mostAdapter from 'redux-observable-adapter-most'
 
 import Root from './containers/Root'
 import configureStore from './store/configureStore'
@@ -18,7 +19,10 @@ import QuivadeTheme from './styles/theme'
 // https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin()
 
-const epicMiddleware = createEpicMiddleware(clientEpic)
+const epicMiddleware = createEpicMiddleware(
+  clientEpic,
+  { adapter: mostAdapter }
+)
 // It is different store enhancer
 // than rendering server side
 const store = reduxReactRouter({

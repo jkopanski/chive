@@ -6,6 +6,7 @@ import { renderToString, renderToStaticMarkup } from 'react-dom/server'
 import { match, reduxReactRouter } from 'redux-router/server'
 import { createMemoryHistory } from 'history'
 import { createEpicMiddleware } from 'redux-observable'
+import mostAdapter from 'redux-observable-adapter-most'
 import qs from 'query-string'
 
 import Html from './containers/Html'
@@ -43,7 +44,10 @@ server.use((req, res) => {
     { userAgent: req.headers['user-agent'] })
   // It is different store enjancer
   // then rendering client side
-  const epicMiddleware = createEpicMiddleware(serverEpic)
+  const epicMiddleware = createEpicMiddleware(
+    serverEpic,
+    { adapter: mostAdapter }
+  )
   const store = reduxReactRouter({
     routes: routes(theme),
     createHistory: createMemoryHistory

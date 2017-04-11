@@ -13,7 +13,7 @@ export const analytics = {
 
 let apiUrl = 'http://api.quivade.com/'
 if (__DEV__) {
-  apiUrl = 'http://localhost:8087/'
+  apiUrl = 'http://api.quivade.net/'
 }
 
 export { apiUrl }

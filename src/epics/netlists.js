@@ -1,8 +1,8 @@
-import 'rxjs/add/observable/fromPromise'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/mergeMap'
-import { Observable } from 'rxjs/Observable'
-import { ActionObservable, combineEpics } from 'redux-observable'
+import R from 'ramda'
+import { map } from 'flow-static-land/lib/Either'
+import { fromPromise } from 'most'
+import { combineEpics } from 'redux-observable'
+import { ActionStream } from 'redux-observable-adapter-most'
 
 import * as netlists from '../actions/netlists'
 import { api } from '../services'
@@ -10,15 +10,17 @@ import { api } from '../services'
 import type { Action } from '../actions'
 
 const netlistUploadEpic = (
-  action$: ActionObservable<Action>
-): ActioObservable<Action> =>
+  action$: ActionStream<Action>
+): ActioStream<Action> =>
   action$
     .ofType('netlistUploadRequest')
-    .mergeMap(action =>
+    .flatMap(action =>
       // TODO: write fromFuture wrapper
-      Observable.fromPromise(
+      fromPromise(
         api.netlistUpload(action.payload.file).promise()
-      ).map(netlists.upload)
+      ).map(enid => netlists.upload(
+        map(R.assoc('filename', action.payload.filename), enid)
+      ))
     )
 
 const netlistsEpic =
