@@ -9,8 +9,7 @@ import { simulations } from './simulations'
 export function * rootClientSaga () {
   yield [
     authClientSaga(),
-    notificationSaga(),
-    simulations()
+    notificationSaga()
   ]
 }
 
