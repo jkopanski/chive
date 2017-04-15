@@ -18,7 +18,6 @@ export const authenticate = (user, pass) => eitherFold(
       'password': pass
     })
   }, 'login', {})
-  .map(R.compose(R.prop('sessionId'), R.prop('result')))
 )
 
 export const netlistUpload = fileInput => eitherFold(
@@ -45,7 +44,6 @@ export const netlistSimulate = (nid, nodes) => eitherFold(
     },
     body: JSON.stringify({nodes: nodes})
   }, `netlists/${nid}/simulate`, {})
-  .map(R.prop('result'))
 )
 
 export const simulationStop = simId => eitherFold(
@@ -57,7 +55,6 @@ export const simulationStop = simId => eitherFold(
     },
     body: {}
   }, `simulations/${simId}/stop`, {})
-  .map(R.prop('result'))
 )
 
 export const simulationStatus = simId => eitherFold(
@@ -68,5 +65,4 @@ export const simulationStatus = simId => eitherFold(
       'Content-Type': 'application/json'
     }
   }, `simulations/${simId}`, {})
-  .map(R.prop('result'))
 )
